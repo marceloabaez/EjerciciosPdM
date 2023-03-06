@@ -21,6 +21,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+#define NUM_LEDS 3 //Permite adaptar el código a un número n de LEDS
+
 /** @addtogroup STM32F4xx_HAL_Examples
  * @{
  */
@@ -61,22 +63,52 @@ int main(void)
 
 	/* Initialize BSP Led for LED1 */
 	BSP_LED_Init(LED1);
+	BSP_LED_Init(LED2);
+	BSP_LED_Init(LED3);
 	/* Initialize BSP PB for BUTTON_USER */
 	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 
+	int flag1 = 0; //Bandera de comprobación de antirebote
+	int j = 1; //Incremento (positivo o negativo) del bucle
+	int i = 0;
 
 	/* Infinite loop */
 	while (1)
 	{
-		if(BSP_PB_GetState(BUTTON_USER)){
+		//El bucle se recorre de manera ascendente o descendente
+		//la variable i se mantiene dentro del intervalo 0-NUM_LEDS
+
+		for(i; (i<NUM_LEDS) && (i >= 0); i+=j){
+			if(BSP_PB_GetState(BUTTON_USER)){
+				flag1 = 1;
+			}
+			BSP_LED_Toggle(i);
+			HAL_Delay(200);
+			BSP_LED_Toggle(i);
+			HAL_Delay(200);
+			if(BSP_PB_GetState(BUTTON_USER) && flag1 == 1){
+				j = j*(-1);
+			}
+			flag1 = 0;
+		}
+		//comprobación de desborde del bucle por arriba o debajo
+		if(i == (-1)){
+			i=(NUM_LEDS - 1);
+		}
+		if(i == NUM_LEDS){
+			i=0;
+		}
+
+
+		/*if(BSP_PB_GetState(BUTTON_USER)){
 			BSP_LED_On(LED1);
 			HAL_Delay(100);
 			BSP_LED_Off(LED1);
-			HAL_Delay(100);
+			HAL_Delay(100);- */
 
 		}
 	}
-}
+//}
 
 
 static void SystemClock_Config(void)

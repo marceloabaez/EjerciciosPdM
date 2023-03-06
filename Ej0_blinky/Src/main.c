@@ -66,13 +66,34 @@ int main(void)
   SystemClock_Config();
 
   /* Initialize BSP Led for LED2 */
+  BSP_LED_Init(LED1);
   BSP_LED_Init(LED2);
+  BSP_LED_Init(LED3);
 
   /* Infinite loop */
+int i = 0;
+
   while (1)
   {
+	  for(i=0; i<3; i++){
+		  BSP_LED_Toggle(i);
+		  HAL_Delay(200);
+		  BSP_LED_Toggle(i);
+		  HAL_Delay(200);
+	  }
+	/*  BSP_LED_Toggle(LED1);
+	  HAL_Delay(200);
+	  BSP_LED_Toggle(LED1);
+	  HAL_Delay(200);
 	  BSP_LED_Toggle(LED2);
-	  HAL_Delay(2000);
+	  HAL_Delay(200);
+	  BSP_LED_Toggle(LED2);
+	  HAL_Delay(200);
+	  BSP_LED_Toggle(LED3);
+	  HAL_Delay(200);
+	  BSP_LED_Toggle(LED3);
+	  HAL_Delay(200);
+*/
   }
 }
 
