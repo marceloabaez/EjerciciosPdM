@@ -20,6 +20,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+/*
+void delayInit( delay_t * delay, tick_t duration );
+bool_t delayRead( delay_t * delay );
+void delayWrite( delay_t * delay, tick_t duration );
+*/
 
 /** @addtogroup STM32F4xx_HAL_Examples
  * @{
@@ -31,9 +36,12 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+
 #define COUNT_LED1 100
 #define COUNT_LED2 500
 #define COUNT_LED3 1000
+#define NUM_LEDS 3
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* UART handler declaration */
@@ -43,6 +51,10 @@ UART_HandleTypeDef UartHandle;
 
 static void SystemClock_Config(void);
 static void Error_Handler(void);
+
+void delayInit( delay_t * delay, tick_t duration );
+bool_t delayRead( delay_t * delay );
+void delayWrite( delay_t * delay, tick_t duration );
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -72,35 +84,34 @@ int main(void)
 	BSP_LED_Init(LED1);
 	BSP_LED_Init(LED2);
 	BSP_LED_Init(LED3);
+	int i=0;
+	uint32_t count_leds[NUM_LEDS] = {COUNT_LED1, COUNT_LED2, COUNT_LED3};
+	delay_t struct_leds[NUM_LEDS];
 
-	uint16_t countLED1 = 0;
-	uint16_t countLED2 = 0;
-	uint16_t countLED3 = 0;
+	for(i=0; i<NUM_LEDS;i++){
+		delayInit(&struct_leds[i], count_leds[i]);
+	}
+
+	//delayInit(&delay_1, COUNT_LED1);
+	//delayInit(&delay_2, COUNT_LED2);
+	//delayInit(&delay_3, COUNT_LED3);
+
+
 
 	/* Infinite loop */
+
 	while (1)
 	{
-		if (countLED1 == COUNT_LED1) {
-			BSP_LED_Toggle(LED1);
-			countLED1 = 0;
+
+		for(i=0;i<NUM_LEDS; i++){
+			if (delayRead(&struct_leds[i])) {
+				BSP_LED_Toggle(i);
+				delayInit(&struct_leds[i], count_leds[i]);
+				}
 		}
 
-		if (countLED2 >= COUNT_LED2) {
-			BSP_LED_Toggle(LED2);
-			countLED2 = 0;
-		}
-
-		if (COUNT_LED3 == countLED3) {
-			BSP_LED_Toggle(LED3);
-			countLED3 = 0;
-		}
-
-		countLED1++;
-		countLED2++;
-		countLED3++;
-
-		HAL_Delay(1);
 	}
+	return 0;
 }
 
 
@@ -125,6 +136,34 @@ int main(void)
  * @param  None
  * @retval None
  */
+
+void delayInit( delay_t * delay, tick_t duration ){
+	delay->duration = duration;
+	//delay->startTime = HAL_GetTick();
+	delay->running = false;
+}
+
+bool_t delayRead( delay_t * delay ){
+	if(delay->running == false){
+		delay->startTime = HAL_GetTick();
+		delay->running = true;
+		return 0;}
+	else {
+		if((HAL_GetTick()-delay->startTime) >= delay->duration){
+			delay->running = false;
+			return(1);
+		}
+		else{
+			return 0;
+		}}}
+
+void delayWrite( delay_t * delay, tick_t duration ){
+	delay->duration = duration;
+}
+
+
+
+
 static void SystemClock_Config(void)
 {
 	RCC_ClkInitTypeDef RCC_ClkInitStruct;

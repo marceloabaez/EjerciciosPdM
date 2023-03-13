@@ -23,12 +23,25 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
+
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "stm32f4xx_hal.h"  		/* <- HAL include */
 #include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
 
 
 /* Exported types ------------------------------------------------------------*/
+typedef uint32_t tick_t;
+typedef bool bool_t;
+
+typedef struct{
+tick_t startTime;
+tick_t duration;
+bool_t running;
+} delay_t;
+
 /* Exported constants --------------------------------------------------------*/
 /* User can use this section to tailor USARTx/UARTx instance used and associated
    resources */
@@ -51,6 +64,9 @@
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
+void delayInit( delay_t * delay, tick_t duration );
+bool_t delayRead( delay_t * delay );
+void delayWrite( delay_t * delay, tick_t duration );
 
 #endif /* __MAIN_H */
 
