@@ -68,13 +68,13 @@ UART_HandleTypeDef UartHandle;
 
 static void SystemClock_Config(void);
 static void Error_Handler(void);
-void debounceFSM_update();
-void debounceFSM_init();
-void buttonPressed();
-void buttonReleased();
-void delayInit( delay_t * delay, tick_t duration );
-bool_t delayRead( delay_t * delay );
-void delayWrite( delay_t * delay, tick_t duration );
+void debounceFSM_update(); //Actualiza la variable de estado
+void debounceFSM_init(); //Inicializa la variable de estado
+void buttonPressed(); //Detecta flanco de bajada
+void buttonReleased(); //Detecta flanco de subida
+void delayInit( delay_t * delay, tick_t duration ); //Inicia conteo de retardo
+bool_t delayRead( delay_t * delay ); //Comprueba cumplimiento del tiempo de retardo
+void delayWrite( delay_t * delay, tick_t duration ); //Actualiza el valor del retardo
 
 
 /* Private functions ---------------------------------------------------------*/

@@ -1,4 +1,4 @@
-- Proyecto API_delayNB: El proyecto tiene como fin empezar a familiarizarse con la modularización
+- Proyecto Ej4_MEF_debounce: El proyecto tiene como fin empezar a familiarizarse con la modularización
 de programas. Las funciones que contienen el delay se ubican en un archivo separado, dejándose en
 el main.h solamente las llamadas a éstas. 
 
