@@ -19,7 +19,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "API_delay.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
  * @{
@@ -30,6 +29,16 @@
  */
 
 /* Private typedef -----------------------------------------------------------*/
+
+typedef uint32_t tick_t;
+typedef bool bool_t;
+
+typedef struct{
+tick_t startTime;
+tick_t duration;
+bool_t running;
+} delay_t;
+
 typedef enum{
 	BUTTON_UP,
 	BUTTON_FALLING,
@@ -45,9 +54,9 @@ typedef enum{
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-int estado = 0;
-int estado_anterior = 0;
-bool_t estado_PB = false;
+int estado = BUTTON_UP;
+int estado_anterior = BUTTON_UP;
+bool_t estado_PB = 1;
 delay_t tiempo_rebote;
 
 /* UART handler declaration */
@@ -59,9 +68,11 @@ static void SystemClock_Config(void);
 static void Error_Handler(void);
 void debounceFSM_update();
 void debounceFSM_init();
-void button_Pressed();
-void button_Released();
-
+void buttonPressed();
+void buttonReleased();
+void delayInit( delay_t * delay, tick_t duration );
+bool_t delayRead( delay_t * delay );
+void delayWrite( delay_t * delay, tick_t duration );
 
 
 /* Private functions ---------------------------------------------------------*/
@@ -71,8 +82,7 @@ void button_Released();
  * @param  None
  * @retval None
  */
-int main(void)
-{
+int main(void){
 	/* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch
        - Systick timer is configured by default as source of time base, but user 
@@ -92,17 +102,18 @@ int main(void)
 	BSP_LED_Init(LED1);
 	BSP_LED_Init(LED2);
 	BSP_LED_Init(LED3);
+	/* Initialize BSP PB for BUTTON_USER */
+	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 
 	delayInit(&tiempo_rebote, DEBOUNCE_TIME);
 	void debounceFSM_init();
 
 	/* Infinite loop */
 
-	while (1)
-	{
-		void debounceFSM_update();
-		void button_Pressed();
-		void button_Released();
+	while(1){
+		debounceFSM_update();
+		buttonPressed();
+		buttonReleased();
 	}
 	return 0;
 }
@@ -143,7 +154,7 @@ void debounceFSM_update(){
 
 	case BUTTON_FALLING:
 		if(delayRead(&tiempo_rebote)){
-			if(BSP_PB_GetState(BUTTON_USER)){
+			if(!BSP_PB_GetState(BUTTON_USER)){
 				estado = BUTTON_DOWN;
 				estado_PB = 0;
 			}
@@ -151,12 +162,14 @@ void debounceFSM_update(){
 				estado = BUTTON_UP;
 			}
 			break;
+
 	case BUTTON_DOWN:
-		if(!BSP_PB_GetState(BUTTON_USER)){
+		if(BSP_PB_GetState(BUTTON_USER)){
 			estado = BUTTON_RISING;
 			delayInit(&tiempo_rebote, DEBOUNCE_TIME);
 		}
 		break;
+
 	case BUTTON_RISING:
 		if(delayRead(&tiempo_rebote)){
 			if(!BSP_PB_GetState(BUTTON_USER)){
@@ -173,6 +186,34 @@ void debounceFSM_update(){
 	}
 
 }}}
+
+// Actualiza el retardo y resetea la bandera del contador
+void delayInit( delay_t * delay, tick_t duration ){
+	delay->duration = duration;
+	//delay->startTime = HAL_GetTick();
+	delay->running = false;
+}
+
+//Si la bandera está alta resetea el tiempo de inicio, si está baja comprueba el
+//tiempo transcurrido, si se ha cumplido levanta la bandera
+bool_t delayRead( delay_t * delay ){
+	if(delay->running == false){
+		delay->startTime = HAL_GetTick();
+		delay->running = true;
+		return 0;}
+	else {
+		if((HAL_GetTick()-delay->startTime) >= delay->duration){
+			delay->running = false;
+			return(1);
+		}
+		else{
+			return 0;
+		}}}
+
+//Actualiza el delay del retardo
+void delayWrite( delay_t * delay, tick_t duration ){
+	delay->duration = duration;}
+
 
 void debounceFSM_init(){
 	estado = BUTTON_UP;

@@ -16,7 +16,7 @@ S_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 Startup/%.o: ../Startup/%.s Startup/subdir.mk
-	arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/STM32F4xx_HAL_Driver/Inc" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/CMSIS/Include" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/BSP/STM32F4xx_Nucleo_144" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Inc" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/Core/Inc" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/API/inc" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/API/src" -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/STM32F4xx_HAL_Driver/Inc" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/CMSIS/Include" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/CMSIS/Device/ST/STM32F4xx/Include" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/BSP/STM32F4xx_Nucleo_144" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Inc" -I"/home/marcelo/Documentos/ese/Ejercicios/Ej4_MEF_debounce/Drivers/Core/Inc" -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
 
 clean: clean-Startup
 
