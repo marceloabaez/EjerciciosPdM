@@ -1,8 +1,10 @@
 /**
  ******************************************************************************
- * @file    API_delayNB/Src/main.c
+ * @file    Ej4_MEF_debounce/Src/main.c
  * @author  Marcelo Báez
- * @brief   Este programa enciende y apaga alternativamente 3 leds en secuencia creciente.
+ * @brief   Este programa implementa una máquina de estados finitos para la función
+ * de antirebote, para luego activar el LED1 con el flanco de bajada y el LED3
+ * con el de subida del PUSH_BUTTON de la placa
  ******************************************************************************
  * @attention
  *
@@ -54,7 +56,7 @@ typedef enum{
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-int estado = BUTTON_UP;
+int estado = BUTTON_UP; //Variable de estado de la MEF
 int estado_anterior = BUTTON_UP;
 bool_t estado_PB = 1;
 delay_t tiempo_rebote;
@@ -141,6 +143,9 @@ int main(void){
  * @retval None
  */
 
+
+//Definición de función de MEF para debounce
+
 void debounceFSM_update(){
 
 	switch (estado){
@@ -154,7 +159,7 @@ void debounceFSM_update(){
 
 	case BUTTON_FALLING:
 		if(delayRead(&tiempo_rebote)){
-			if(!BSP_PB_GetState(BUTTON_USER)){
+			if(BSP_PB_GetState(BUTTON_USER)){
 				estado = BUTTON_DOWN;
 				estado_PB = 0;
 			}
@@ -164,7 +169,7 @@ void debounceFSM_update(){
 			break;
 
 	case BUTTON_DOWN:
-		if(BSP_PB_GetState(BUTTON_USER)){
+		if(!BSP_PB_GetState(BUTTON_USER)){
 			estado = BUTTON_RISING;
 			delayInit(&tiempo_rebote, DEBOUNCE_TIME);
 		}
@@ -186,6 +191,29 @@ void debounceFSM_update(){
 	}
 
 }}}
+
+//Inicializa la variable de estado en UP
+void debounceFSM_init(){
+	estado = BUTTON_UP;
+}
+
+//Funciones de detección de flanco de bajada y subida. Siempre deben incluirse ambas y
+//ejecutarse una tras la otra, ya que trabajan sobre una misma bandera, habilitándose mutuamente.
+
+void buttonPressed(){
+	if(estado == BUTTON_DOWN && estado_anterior == BUTTON_UP){
+	BSP_LED_Toggle(LED1);
+	estado_anterior = estado;
+	}
+}
+
+void buttonReleased(){
+	if(estado == BUTTON_UP && estado_anterior == BUTTON_DOWN){
+		BSP_LED_Toggle(LED3);
+		estado_anterior = estado;
+}
+}
+
 
 // Actualiza el retardo y resetea la bandera del contador
 void delayInit( delay_t * delay, tick_t duration ){
@@ -214,24 +242,6 @@ bool_t delayRead( delay_t * delay ){
 void delayWrite( delay_t * delay, tick_t duration ){
 	delay->duration = duration;}
 
-
-void debounceFSM_init(){
-	estado = BUTTON_UP;
-}
-
-void buttonPressed(){
-	if(estado == BUTTON_DOWN && estado_anterior == BUTTON_UP){
-	BSP_LED_Toggle(LED1);
-	estado_anterior = estado;
-	}
-}
-
-void buttonReleased(){
-	if(estado == BUTTON_UP && estado_anterior == BUTTON_DOWN){
-		BSP_LED_Toggle(LED3);
-		estado_anterior = estado;
-}
-}
 
 static void SystemClock_Config(void)
 {

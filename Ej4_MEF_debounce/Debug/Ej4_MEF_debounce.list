@@ -29,23 +29,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  0002001c  2**0
                   CONTENTS, READONLY
- 13 .debug_info   00004e73  00000000  00000000  0002004c  2**0
+ 13 .debug_info   00004e74  00000000  00000000  0002004c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 000011d9  00000000  00000000  00024ebf  2**0
+ 14 .debug_abbrev 000011ea  00000000  00000000  00024ec0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000508  00000000  00000000  00026098  2**3
+ 15 .debug_aranges 00000508  00000000  00000000  000260b0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_ranges 00000460  00000000  00000000  000265a0  2**3
+ 16 .debug_ranges 00000460  00000000  00000000  000265b8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  00024e14  00000000  00000000  00026a00  2**0
+ 17 .debug_macro  00024e14  00000000  00000000  00026a18  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000727f  00000000  00000000  0004b814  2**0
+ 18 .debug_line   0000727f  00000000  00000000  0004b82c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000e1258  00000000  00000000  00052a93  2**0
+ 19 .debug_str    000e1258  00000000  00000000  00052aab  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  00133ceb  2**0
+ 20 .comment      00000050  00000000  00000000  00133d03  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  000011fc  00000000  00000000  00133d3c  2**2
+ 21 .debug_frame  000011fc  00000000  00000000  00133d54  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -3697,7 +3697,7 @@ int main(void){
 	delayInit(&tiempo_rebote, DEBOUNCE_TIME);
  800181e:	2128      	movs	r1, #40	; 0x28
  8001820:	4804      	ldr	r0, [pc, #16]	; (8001834 <main+0x3c>)
- 8001822:	f000 f873 	bl	800190c <delayInit>
+ 8001822:	f000 f8a3 	bl	800196c <delayInit>
 	void debounceFSM_init();
 
 	/* Infinite loop */
@@ -3706,18 +3706,18 @@ int main(void){
 		debounceFSM_update();
  8001826:	f000 f807 	bl	8001838 <debounceFSM_update>
 		buttonPressed();
- 800182a:	f000 f8a9 	bl	8001980 <buttonPressed>
+ 800182a:	f000 f86f 	bl	800190c <buttonPressed>
 		buttonReleased();
- 800182e:	f000 f8bf 	bl	80019b0 <buttonReleased>
+ 800182e:	f000 f885 	bl	800193c <buttonReleased>
 		debounceFSM_update();
  8001832:	e7f8      	b.n	8001826 <main+0x2e>
  8001834:	20000044 	.word	0x20000044
 
 08001838 <debounceFSM_update>:
- *            Flash Latency(WS)              = 5
- * @param  None
- * @retval None
  */
+
+
+//Definición de función de MEF para debounce
 
 void debounceFSM_update(){
  8001838:	b580      	push	{r7, lr}
@@ -3750,7 +3750,7 @@ void debounceFSM_update(){
 			delayInit(&tiempo_rebote, DEBOUNCE_TIME);
  800186e:	2128      	movs	r1, #40	; 0x28
  8001870:	4824      	ldr	r0, [pc, #144]	; (8001904 <debounceFSM_update+0xcc>)
- 8001872:	f000 f84b 	bl	800190c <delayInit>
+ 8001872:	f000 f87b 	bl	800196c <delayInit>
 		}
 		break;
  8001876:	e03d      	b.n	80018f4 <debounceFSM_update+0xbc>
@@ -3758,16 +3758,16 @@ void debounceFSM_update(){
 	case BUTTON_FALLING:
 		if(delayRead(&tiempo_rebote)){
  8001878:	4822      	ldr	r0, [pc, #136]	; (8001904 <debounceFSM_update+0xcc>)
- 800187a:	f000 f858 	bl	800192e <delayRead>
+ 800187a:	f000 f888 	bl	800198e <delayRead>
  800187e:	4603      	mov	r3, r0
  8001880:	2b00      	cmp	r3, #0
  8001882:	d03a      	beq.n	80018fa <debounceFSM_update+0xc2>
-			if(!BSP_PB_GetState(BUTTON_USER)){
+			if(BSP_PB_GetState(BUTTON_USER)){
  8001884:	2000      	movs	r0, #0
  8001886:	f7fe ff0d 	bl	80006a4 <BSP_PB_GetState>
  800188a:	4603      	mov	r3, r0
  800188c:	2b00      	cmp	r3, #0
- 800188e:	d106      	bne.n	800189e <debounceFSM_update+0x66>
+ 800188e:	d006      	beq.n	800189e <debounceFSM_update+0x66>
 				estado = BUTTON_DOWN;
  8001890:	4b1b      	ldr	r3, [pc, #108]	; (8001900 <debounceFSM_update+0xc8>)
  8001892:	2202      	movs	r2, #2
@@ -3790,12 +3790,12 @@ void debounceFSM_update(){
  80018a4:	e029      	b.n	80018fa <debounceFSM_update+0xc2>
 
 	case BUTTON_DOWN:
-		if(BSP_PB_GetState(BUTTON_USER)){
+		if(!BSP_PB_GetState(BUTTON_USER)){
  80018a6:	2000      	movs	r0, #0
  80018a8:	f7fe fefc 	bl	80006a4 <BSP_PB_GetState>
  80018ac:	4603      	mov	r3, r0
  80018ae:	2b00      	cmp	r3, #0
- 80018b0:	d022      	beq.n	80018f8 <debounceFSM_update+0xc0>
+ 80018b0:	d122      	bne.n	80018f8 <debounceFSM_update+0xc0>
 			estado = BUTTON_RISING;
  80018b2:	4b13      	ldr	r3, [pc, #76]	; (8001900 <debounceFSM_update+0xc8>)
  80018b4:	2203      	movs	r2, #3
@@ -3803,7 +3803,7 @@ void debounceFSM_update(){
 			delayInit(&tiempo_rebote, DEBOUNCE_TIME);
  80018b8:	2128      	movs	r1, #40	; 0x28
  80018ba:	4812      	ldr	r0, [pc, #72]	; (8001904 <debounceFSM_update+0xcc>)
- 80018bc:	f000 f826 	bl	800190c <delayInit>
+ 80018bc:	f000 f856 	bl	800196c <delayInit>
 		}
 		break;
  80018c0:	e01a      	b.n	80018f8 <debounceFSM_update+0xc0>
@@ -3811,7 +3811,7 @@ void debounceFSM_update(){
 	case BUTTON_RISING:
 		if(delayRead(&tiempo_rebote)){
  80018c2:	4810      	ldr	r0, [pc, #64]	; (8001904 <debounceFSM_update+0xcc>)
- 80018c4:	f000 f833 	bl	800192e <delayRead>
+ 80018c4:	f000 f863 	bl	800198e <delayRead>
  80018c8:	4603      	mov	r3, r0
  80018ca:	2b00      	cmp	r3, #0
  80018cc:	d015      	beq.n	80018fa <debounceFSM_update+0xc2>
@@ -3861,152 +3861,156 @@ void debounceFSM_update(){
  8001904:	20000044 	.word	0x20000044
  8001908:	20000019 	.word	0x20000019
 
-0800190c <delayInit>:
+0800190c <buttonPressed>:
+}
+
+//Funciones de detección de flanco de bajada y subida. Siempre deben incluirse ambas y
+//ejecutarse una tras la otra, ya que trabajan sobre una misma bandera, habilitándose mutuamente.
+
+void buttonPressed(){
+ 800190c:	b580      	push	{r7, lr}
+ 800190e:	af00      	add	r7, sp, #0
+	if(estado == BUTTON_DOWN && estado_anterior == BUTTON_UP){
+ 8001910:	4b08      	ldr	r3, [pc, #32]	; (8001934 <buttonPressed+0x28>)
+ 8001912:	681b      	ldr	r3, [r3, #0]
+ 8001914:	2b02      	cmp	r3, #2
+ 8001916:	d10a      	bne.n	800192e <buttonPressed+0x22>
+ 8001918:	4b07      	ldr	r3, [pc, #28]	; (8001938 <buttonPressed+0x2c>)
+ 800191a:	681b      	ldr	r3, [r3, #0]
+ 800191c:	2b00      	cmp	r3, #0
+ 800191e:	d106      	bne.n	800192e <buttonPressed+0x22>
+	BSP_LED_Toggle(LED1);
+ 8001920:	2000      	movs	r0, #0
+ 8001922:	f7fe fe4f 	bl	80005c4 <BSP_LED_Toggle>
+	estado_anterior = estado;
+ 8001926:	4b03      	ldr	r3, [pc, #12]	; (8001934 <buttonPressed+0x28>)
+ 8001928:	681b      	ldr	r3, [r3, #0]
+ 800192a:	4a03      	ldr	r2, [pc, #12]	; (8001938 <buttonPressed+0x2c>)
+ 800192c:	6013      	str	r3, [r2, #0]
+	}
+}
+ 800192e:	bf00      	nop
+ 8001930:	bd80      	pop	{r7, pc}
+ 8001932:	bf00      	nop
+ 8001934:	2000003c 	.word	0x2000003c
+ 8001938:	20000040 	.word	0x20000040
+
+0800193c <buttonReleased>:
+
+void buttonReleased(){
+ 800193c:	b580      	push	{r7, lr}
+ 800193e:	af00      	add	r7, sp, #0
+	if(estado == BUTTON_UP && estado_anterior == BUTTON_DOWN){
+ 8001940:	4b08      	ldr	r3, [pc, #32]	; (8001964 <buttonReleased+0x28>)
+ 8001942:	681b      	ldr	r3, [r3, #0]
+ 8001944:	2b00      	cmp	r3, #0
+ 8001946:	d10a      	bne.n	800195e <buttonReleased+0x22>
+ 8001948:	4b07      	ldr	r3, [pc, #28]	; (8001968 <buttonReleased+0x2c>)
+ 800194a:	681b      	ldr	r3, [r3, #0]
+ 800194c:	2b02      	cmp	r3, #2
+ 800194e:	d106      	bne.n	800195e <buttonReleased+0x22>
+		BSP_LED_Toggle(LED3);
+ 8001950:	2002      	movs	r0, #2
+ 8001952:	f7fe fe37 	bl	80005c4 <BSP_LED_Toggle>
+		estado_anterior = estado;
+ 8001956:	4b03      	ldr	r3, [pc, #12]	; (8001964 <buttonReleased+0x28>)
+ 8001958:	681b      	ldr	r3, [r3, #0]
+ 800195a:	4a03      	ldr	r2, [pc, #12]	; (8001968 <buttonReleased+0x2c>)
+ 800195c:	6013      	str	r3, [r2, #0]
+}
+}
+ 800195e:	bf00      	nop
+ 8001960:	bd80      	pop	{r7, pc}
+ 8001962:	bf00      	nop
+ 8001964:	2000003c 	.word	0x2000003c
+ 8001968:	20000040 	.word	0x20000040
+
+0800196c <delayInit>:
+
 
 // Actualiza el retardo y resetea la bandera del contador
 void delayInit( delay_t * delay, tick_t duration ){
- 800190c:	b480      	push	{r7}
- 800190e:	b083      	sub	sp, #12
- 8001910:	af00      	add	r7, sp, #0
- 8001912:	6078      	str	r0, [r7, #4]
- 8001914:	6039      	str	r1, [r7, #0]
+ 800196c:	b480      	push	{r7}
+ 800196e:	b083      	sub	sp, #12
+ 8001970:	af00      	add	r7, sp, #0
+ 8001972:	6078      	str	r0, [r7, #4]
+ 8001974:	6039      	str	r1, [r7, #0]
 	delay->duration = duration;
- 8001916:	687b      	ldr	r3, [r7, #4]
- 8001918:	683a      	ldr	r2, [r7, #0]
- 800191a:	605a      	str	r2, [r3, #4]
+ 8001976:	687b      	ldr	r3, [r7, #4]
+ 8001978:	683a      	ldr	r2, [r7, #0]
+ 800197a:	605a      	str	r2, [r3, #4]
 	//delay->startTime = HAL_GetTick();
 	delay->running = false;
- 800191c:	687b      	ldr	r3, [r7, #4]
- 800191e:	2200      	movs	r2, #0
- 8001920:	721a      	strb	r2, [r3, #8]
+ 800197c:	687b      	ldr	r3, [r7, #4]
+ 800197e:	2200      	movs	r2, #0
+ 8001980:	721a      	strb	r2, [r3, #8]
 }
- 8001922:	bf00      	nop
- 8001924:	370c      	adds	r7, #12
- 8001926:	46bd      	mov	sp, r7
- 8001928:	f85d 7b04 	ldr.w	r7, [sp], #4
- 800192c:	4770      	bx	lr
+ 8001982:	bf00      	nop
+ 8001984:	370c      	adds	r7, #12
+ 8001986:	46bd      	mov	sp, r7
+ 8001988:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 800198c:	4770      	bx	lr
 
-0800192e <delayRead>:
+0800198e <delayRead>:
 
 //Si la bandera está alta resetea el tiempo de inicio, si está baja comprueba el
 //tiempo transcurrido, si se ha cumplido levanta la bandera
 bool_t delayRead( delay_t * delay ){
- 800192e:	b580      	push	{r7, lr}
- 8001930:	b082      	sub	sp, #8
- 8001932:	af00      	add	r7, sp, #0
- 8001934:	6078      	str	r0, [r7, #4]
+ 800198e:	b580      	push	{r7, lr}
+ 8001990:	b082      	sub	sp, #8
+ 8001992:	af00      	add	r7, sp, #0
+ 8001994:	6078      	str	r0, [r7, #4]
 	if(delay->running == false){
- 8001936:	687b      	ldr	r3, [r7, #4]
- 8001938:	7a1b      	ldrb	r3, [r3, #8]
- 800193a:	f083 0301 	eor.w	r3, r3, #1
- 800193e:	b2db      	uxtb	r3, r3
- 8001940:	2b00      	cmp	r3, #0
- 8001942:	d009      	beq.n	8001958 <delayRead+0x2a>
+ 8001996:	687b      	ldr	r3, [r7, #4]
+ 8001998:	7a1b      	ldrb	r3, [r3, #8]
+ 800199a:	f083 0301 	eor.w	r3, r3, #1
+ 800199e:	b2db      	uxtb	r3, r3
+ 80019a0:	2b00      	cmp	r3, #0
+ 80019a2:	d009      	beq.n	80019b8 <delayRead+0x2a>
 		delay->startTime = HAL_GetTick();
- 8001944:	f7fe ff88 	bl	8000858 <HAL_GetTick>
- 8001948:	4602      	mov	r2, r0
- 800194a:	687b      	ldr	r3, [r7, #4]
- 800194c:	601a      	str	r2, [r3, #0]
+ 80019a4:	f7fe ff58 	bl	8000858 <HAL_GetTick>
+ 80019a8:	4602      	mov	r2, r0
+ 80019aa:	687b      	ldr	r3, [r7, #4]
+ 80019ac:	601a      	str	r2, [r3, #0]
 		delay->running = true;
- 800194e:	687b      	ldr	r3, [r7, #4]
- 8001950:	2201      	movs	r2, #1
- 8001952:	721a      	strb	r2, [r3, #8]
+ 80019ae:	687b      	ldr	r3, [r7, #4]
+ 80019b0:	2201      	movs	r2, #1
+ 80019b2:	721a      	strb	r2, [r3, #8]
 		return 0;}
- 8001954:	2300      	movs	r3, #0
- 8001956:	e00f      	b.n	8001978 <delayRead+0x4a>
+ 80019b4:	2300      	movs	r3, #0
+ 80019b6:	e00f      	b.n	80019d8 <delayRead+0x4a>
 	else {
 		if((HAL_GetTick()-delay->startTime) >= delay->duration){
- 8001958:	f7fe ff7e 	bl	8000858 <HAL_GetTick>
- 800195c:	4602      	mov	r2, r0
- 800195e:	687b      	ldr	r3, [r7, #4]
- 8001960:	681b      	ldr	r3, [r3, #0]
- 8001962:	1ad2      	subs	r2, r2, r3
- 8001964:	687b      	ldr	r3, [r7, #4]
- 8001966:	685b      	ldr	r3, [r3, #4]
- 8001968:	429a      	cmp	r2, r3
- 800196a:	d304      	bcc.n	8001976 <delayRead+0x48>
+ 80019b8:	f7fe ff4e 	bl	8000858 <HAL_GetTick>
+ 80019bc:	4602      	mov	r2, r0
+ 80019be:	687b      	ldr	r3, [r7, #4]
+ 80019c0:	681b      	ldr	r3, [r3, #0]
+ 80019c2:	1ad2      	subs	r2, r2, r3
+ 80019c4:	687b      	ldr	r3, [r7, #4]
+ 80019c6:	685b      	ldr	r3, [r3, #4]
+ 80019c8:	429a      	cmp	r2, r3
+ 80019ca:	d304      	bcc.n	80019d6 <delayRead+0x48>
 			delay->running = false;
- 800196c:	687b      	ldr	r3, [r7, #4]
- 800196e:	2200      	movs	r2, #0
- 8001970:	721a      	strb	r2, [r3, #8]
+ 80019cc:	687b      	ldr	r3, [r7, #4]
+ 80019ce:	2200      	movs	r2, #0
+ 80019d0:	721a      	strb	r2, [r3, #8]
 			return(1);
- 8001972:	2301      	movs	r3, #1
- 8001974:	e000      	b.n	8001978 <delayRead+0x4a>
+ 80019d2:	2301      	movs	r3, #1
+ 80019d4:	e000      	b.n	80019d8 <delayRead+0x4a>
 		}
 		else{
 			return 0;
- 8001976:	2300      	movs	r3, #0
+ 80019d6:	2300      	movs	r3, #0
 		}}}
- 8001978:	4618      	mov	r0, r3
- 800197a:	3708      	adds	r7, #8
- 800197c:	46bd      	mov	sp, r7
- 800197e:	bd80      	pop	{r7, pc}
-
-08001980 <buttonPressed>:
-
-void debounceFSM_init(){
-	estado = BUTTON_UP;
-}
-
-void buttonPressed(){
- 8001980:	b580      	push	{r7, lr}
- 8001982:	af00      	add	r7, sp, #0
-	if(estado == BUTTON_DOWN && estado_anterior == BUTTON_UP){
- 8001984:	4b08      	ldr	r3, [pc, #32]	; (80019a8 <buttonPressed+0x28>)
- 8001986:	681b      	ldr	r3, [r3, #0]
- 8001988:	2b02      	cmp	r3, #2
- 800198a:	d10a      	bne.n	80019a2 <buttonPressed+0x22>
- 800198c:	4b07      	ldr	r3, [pc, #28]	; (80019ac <buttonPressed+0x2c>)
- 800198e:	681b      	ldr	r3, [r3, #0]
- 8001990:	2b00      	cmp	r3, #0
- 8001992:	d106      	bne.n	80019a2 <buttonPressed+0x22>
-	BSP_LED_Toggle(LED1);
- 8001994:	2000      	movs	r0, #0
- 8001996:	f7fe fe15 	bl	80005c4 <BSP_LED_Toggle>
-	estado_anterior = estado;
- 800199a:	4b03      	ldr	r3, [pc, #12]	; (80019a8 <buttonPressed+0x28>)
- 800199c:	681b      	ldr	r3, [r3, #0]
- 800199e:	4a03      	ldr	r2, [pc, #12]	; (80019ac <buttonPressed+0x2c>)
- 80019a0:	6013      	str	r3, [r2, #0]
-	}
-}
- 80019a2:	bf00      	nop
- 80019a4:	bd80      	pop	{r7, pc}
- 80019a6:	bf00      	nop
- 80019a8:	2000003c 	.word	0x2000003c
- 80019ac:	20000040 	.word	0x20000040
-
-080019b0 <buttonReleased>:
-
-void buttonReleased(){
- 80019b0:	b580      	push	{r7, lr}
- 80019b2:	af00      	add	r7, sp, #0
-	if(estado == BUTTON_UP && estado_anterior == BUTTON_DOWN){
- 80019b4:	4b08      	ldr	r3, [pc, #32]	; (80019d8 <buttonReleased+0x28>)
- 80019b6:	681b      	ldr	r3, [r3, #0]
- 80019b8:	2b00      	cmp	r3, #0
- 80019ba:	d10a      	bne.n	80019d2 <buttonReleased+0x22>
- 80019bc:	4b07      	ldr	r3, [pc, #28]	; (80019dc <buttonReleased+0x2c>)
- 80019be:	681b      	ldr	r3, [r3, #0]
- 80019c0:	2b02      	cmp	r3, #2
- 80019c2:	d106      	bne.n	80019d2 <buttonReleased+0x22>
-		BSP_LED_Toggle(LED3);
- 80019c4:	2002      	movs	r0, #2
- 80019c6:	f7fe fdfd 	bl	80005c4 <BSP_LED_Toggle>
-		estado_anterior = estado;
- 80019ca:	4b03      	ldr	r3, [pc, #12]	; (80019d8 <buttonReleased+0x28>)
- 80019cc:	681b      	ldr	r3, [r3, #0]
- 80019ce:	4a03      	ldr	r2, [pc, #12]	; (80019dc <buttonReleased+0x2c>)
- 80019d0:	6013      	str	r3, [r2, #0]
-}
-}
- 80019d2:	bf00      	nop
- 80019d4:	bd80      	pop	{r7, pc}
- 80019d6:	bf00      	nop
- 80019d8:	2000003c 	.word	0x2000003c
- 80019dc:	20000040 	.word	0x20000040
+ 80019d8:	4618      	mov	r0, r3
+ 80019da:	3708      	adds	r7, #8
+ 80019dc:	46bd      	mov	sp, r7
+ 80019de:	bd80      	pop	{r7, pc}
 
 080019e0 <SystemClock_Config>:
+void delayWrite( delay_t * delay, tick_t duration ){
+	delay->duration = duration;}
+
 
 static void SystemClock_Config(void)
 {
