@@ -39,34 +39,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := Ej4_parte2_API_MEF
+BUILD_ARTIFACT_NAME := Ej4_parte2_API_MEF2
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Ej4_parte2_API_MEF.elf \
+Ej4_parte2_API_MEF2.elf \
 
 MAP_FILES += \
-Ej4_parte2_API_MEF.map \
+Ej4_parte2_API_MEF2.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-Ej4_parte2_API_MEF.list \
+Ej4_parte2_API_MEF2.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: Ej4_parte2_API_MEF.elf secondary-outputs
+main-build: Ej4_parte2_API_MEF2.elf secondary-outputs
 
 # Tool invocations
-Ej4_parte2_API_MEF.elf Ej4_parte2_API_MEF.map: $(OBJS) $(USER_OBJS) /home/marcelo/Documentos/ese/Ejercicios/Ej4_parte2_API_MEF/STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Ej4_parte2_API_MEF.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/marcelo/Documentos/ese/Ejercicios/Ej4_parte2_API_MEF/STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Ej4_parte2_API_MEF.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Ej4_parte2_API_MEF2.elf Ej4_parte2_API_MEF2.map: $(OBJS) $(USER_OBJS) /home/marcelo/Documentos/ese/Ejercicios/Ej4_parte2_API_MEF/STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Ej4_parte2_API_MEF2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/marcelo/Documentos/ese/Ejercicios/Ej4_parte2_API_MEF/STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Ej4_parte2_API_MEF2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -75,14 +75,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Ej4_parte2_API_MEF.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Ej4_parte2_API_MEF.list"
+Ej4_parte2_API_MEF2.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Ej4_parte2_API_MEF2.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) Ej4_parte2_API_MEF.elf Ej4_parte2_API_MEF.list Ej4_parte2_API_MEF.map default.size.stdout
+	-$(RM) Ej4_parte2_API_MEF2.elf Ej4_parte2_API_MEF2.list Ej4_parte2_API_MEF2.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

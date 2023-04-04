@@ -1,19 +1,17 @@
 #include "API_debounce.h"
+#include "API_delay.h"
 
+delay_t tiempo_rebote;
 
 void debounceFSM_update(); //Actualiza la variable de estado
 void debounceFSM_init(); //Inicializa la variable de estado
 void buttonPressed(); //Detecta flanco de bajada
 void buttonReleased(); //Detecta flanco de subida
-void delayInit( delay_t * delay, tick_t duration ); //Inicia conteo de retardo
-bool_t delayRead( delay_t * delay ); //Comprueba cumplimiento del tiempo de retardo
-void delayWrite( delay_t * delay, tick_t duration ); //Actualiza el valor del retardo
 bool_t readKey(); //Comprueba si el pulsador fue oprimido
 
-int estado = BUTTON_UP; //Variable de estado de la MEF
-int estado_anterior = BUTTON_UP;
-bool_t estado_PB = 1;
-delay_t tiempo_rebote;
+static int estado = BUTTON_UP; //Variable de estado de la MEF
+static int estado_anterior = BUTTON_UP;
+static bool_t estado_PB = 1;
 static bool_t debounceState_t = 0;
 
 
@@ -97,29 +95,3 @@ void buttonReleased(){
 }
 
 
-// Actualiza el retardo y resetea la bandera del contador
-void delayInit( delay_t * delay, tick_t duration ){
-	delay->duration = duration;
-	//delay->startTime = HAL_GetTick();
-	delay->running = false;
-}
-
-//Si la bandera está alta resetea el tiempo de inicio, si está baja comprueba el
-//tiempo transcurrido, si se ha cumplido levanta la bandera
-bool_t delayRead( delay_t * delay ){
-	if(delay->running == false){
-		delay->startTime = HAL_GetTick();
-		delay->running = true;
-		return 0;}
-	else {
-		if((HAL_GetTick()-delay->startTime) >= delay->duration){
-			delay->running = false;
-			return(1);
-		}
-		else{
-			return 0;
-		}}}
-
-//Actualiza el delay del retardo
-void delayWrite( delay_t * delay, tick_t duration ){
-	delay->duration = duration;}

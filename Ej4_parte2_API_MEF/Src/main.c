@@ -23,6 +23,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "API_debounce.h"
+#include "API_delay.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
  * @{
@@ -45,7 +46,7 @@ bool_t i = false;
 //int estado = BUTTON_UP; //Variable de estado de la MEF
 //int estado_anterior = BUTTON_UP;
 //bool_t estado_PB = 1;
-extern delay_t tiempo_rebote;
+//extern delay_t tiempo_rebote;
 delay_t tiempo_LED;
 
 /* UART handler declaration */
@@ -83,7 +84,7 @@ int main(void){
 	BSP_LED_Init(LED2);
 	/* Initialize BSP PB for BUTTON_USER */
 	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
-
+	delay_t tiempo_rebote;
 	delayInit(&tiempo_rebote, DEBOUNCE_TIME);
 	delayInit(&tiempo_LED, freq[i]);
 	void debounceFSM_init();
