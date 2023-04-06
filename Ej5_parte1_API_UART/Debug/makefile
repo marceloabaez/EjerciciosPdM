@@ -65,8 +65,8 @@ all: main-build
 main-build: Ej5_parte1_API_UART.elf secondary-outputs
 
 # Tool invocations
-Ej5_parte1_API_UART.elf Ej5_parte1_API_UART.map: $(OBJS) $(USER_OBJS) /home/marcelo/STM32CubeIDE/workspace_1.11.2/Ej5_parte1_API_UART/STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Ej5_parte1_API_UART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/marcelo/STM32CubeIDE/workspace_1.11.2/Ej5_parte1_API_UART/STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Ej5_parte1_API_UART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Ej5_parte1_API_UART.elf Ej5_parte1_API_UART.map: $(OBJS) $(USER_OBJS) /home/marcelo/Documentos/ese/Ejercicios/Ej5_parte1_API_UART/STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Ej5_parte1_API_UART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/marcelo/Documentos/ese/Ejercicios/Ej5_parte1_API_UART/STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Ej5_parte1_API_UART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

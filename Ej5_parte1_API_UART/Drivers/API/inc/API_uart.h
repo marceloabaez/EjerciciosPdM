@@ -11,5 +11,5 @@ typedef bool bool_t;
 
 bool_t uartInit();
 void uartSendString(uint8_t * pstring);
-//void uartSendStringSize(uint8_t * pstring, 20);
+void uartSendStringSize(uint8_t * pstring, uint16_t size);
 //void uartReceiveStringSize(uint8_t * pstring, uint16_t size);

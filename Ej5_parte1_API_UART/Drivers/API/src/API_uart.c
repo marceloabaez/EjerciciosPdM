@@ -4,14 +4,14 @@
 #define uart_failed "Fallo inicializacion\r\n"
 typedef bool bool_t;
 
-UART_HandleTypeDef UartHandle;
-uint32_t uart_delay = 1000;
+static UART_HandleTypeDef UartHandle;
+uint32_t uart_delay = 100;
 char pstring[100];
 
 //Inicializa la UART;
 bool_t uartInit(){
 	UartHandle.Instance        = USART3;
-	UartHandle.Init.BaudRate   = 115200;
+	UartHandle.Init.BaudRate   = 9600;
 	UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
 	UartHandle.Init.StopBits   = UART_STOPBITS_1;
 	UartHandle.Init.Parity     = UART_PARITY_NONE;
@@ -19,16 +19,16 @@ bool_t uartInit(){
 	UartHandle.Init.Mode       = UART_MODE_TX_RX;
 	UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
 	if (HAL_UART_Init(&UartHandle) != HAL_OK){
-
+		uartSendString((uint8_t *) uart_ok);
 		return 1;
 	}
-	//uartSendString((uint8_t *) uart_failed);
+	uartSendString((uint8_t *) uart_failed);
 	return 0;
 }
 
 void uartSendString(uint8_t * pstring){
-	uint16_t len = (uint16_t) strlen((char *)pstring);
-	HAL_UART_Transmit(&UartHandle, pstring, 28, uart_delay);
+	uint16_t len = (uint16_t) strlen((const char *)pstring);
+	HAL_UART_Transmit(&UartHandle, pstring, len, uart_delay);
 }
 
 
@@ -36,7 +36,7 @@ void uartSendStringSize(uint8_t * pstring, uint16_t size){
 	if(size <= strlen((const char *) pstring)){
 	HAL_UART_Transmit(&UartHandle, pstring, size, uart_delay);
 }	else{
-	uartSendString((uint8_t *) "La cantidad de caracteres debe ser menor que la longitud del string");
+	uartSendString((uint8_t *) "Caracteres > longitud del string");
 }
 }
 

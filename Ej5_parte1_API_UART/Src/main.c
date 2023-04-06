@@ -43,7 +43,7 @@
 /* Private variables ---------------------------------------------------------*/
 uint16_t freq[2] = {f1, f2};
 bool_t i = false;
-char uart_buf[] = "Mensaje inicial de la UART\r\n";
+char uart_buf[] = "Mensaje inicial de la UART\n\r";
 
 //int estado = BUTTON_UP; //Variable de estado de la MEF
 //int estado_anterior = BUTTON_UP;
@@ -90,7 +90,7 @@ int main(void){
 	delayInit(&tiempo_rebote, DEBOUNCE_TIME);
 	delayInit(&tiempo_LED, freq[i]);
 	void debounceFSM_init();
-	//sprintf(uart_buf, "Mensaje inicial de la UART");
+
 	uartInit();
 	/* Infinite loop */
 
@@ -110,7 +110,7 @@ int main(void){
 		uartSendString((uint8_t *)uart_buf);
 		//uartSendStringSize((uint8_t *)uart_buf);
 
-		HAL_Delay(2500);
+		HAL_Delay(500);
 
 
 
