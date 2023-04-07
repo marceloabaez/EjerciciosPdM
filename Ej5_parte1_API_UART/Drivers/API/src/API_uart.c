@@ -2,9 +2,10 @@
 
 #define uart_ok "Inicializacion correcta\r\n"
 #define uart_failed "Fallo inicializacion\r\n"
+#define init_msg "Comunicación UART 9600, 8N1, HwC_OFF, Tx-Rx, OS_16"
 typedef bool bool_t;
 
-static UART_HandleTypeDef UartHandle;
+UART_HandleTypeDef UartHandle;
 uint32_t uart_delay = 100;
 char pstring[100];
 
@@ -18,11 +19,14 @@ bool_t uartInit(){
 	UartHandle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
 	UartHandle.Init.Mode       = UART_MODE_TX_RX;
 	UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
+
+
 	if (HAL_UART_Init(&UartHandle) != HAL_OK){
-		uartSendString((uint8_t *) uart_ok);
+		uartSendString((uint8_t *) uart_failed);
 		return 1;
 	}
-	uartSendString((uint8_t *) uart_failed);
+	uartSendString((uint8_t *) uart_ok);
+	uartSendString((uint8_t *) init_msg);
 	return 0;
 }
 

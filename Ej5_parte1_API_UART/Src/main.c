@@ -21,6 +21,7 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+
 #include "main.h"
 #include "API_debounce.h"
 #include "API_delay.h"
@@ -43,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 uint16_t freq[2] = {f1, f2};
 bool_t i = false;
-char uart_buf[] = "Mensaje inicial de la UART\n\r";
+char uart_buf[] = "Mensaje UART\n\r";
 
 //int estado = BUTTON_UP; //Variable de estado de la MEF
 //int estado_anterior = BUTTON_UP;
@@ -81,6 +82,7 @@ int main(void){
 
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
+	  //MX_USART3_UART_Init()
 
 	/* Initialize BSP Led for LED2 */
 	BSP_LED_Init(LED2);
@@ -109,7 +111,6 @@ int main(void){
 
 		uartSendString((uint8_t *)uart_buf);
 		//uartSendStringSize((uint8_t *)uart_buf);
-
 		HAL_Delay(500);
 
 
