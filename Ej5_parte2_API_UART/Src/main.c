@@ -1,11 +1,11 @@
 /**
  ******************************************************************************
- * @file    Ej4_parte2_API_MEF/Src/main.c
+ * @file    Ej5_parte2_API_UART/Src/main.c
  * @author  Marcelo Báez
- * @brief   Este programa implementa una máquina de estados finitos para la función
- * de antirebote en el PUSH_BUTTON de la placa, para luego cambiar la frecuencia de
- * parpadeo del LED2 entre dos valores prefijados, cuando detecta un flanco de bajada
- * del pulsador.
+ * @brief   Este programa implementa comunicación UART con la PC para indicar la
+ * presencia de flancos ascendentes y descendentes en el pulsador de la placa. Al
+ * inicio también envía un mensaje de inicialización correcta con los parámetros
+ * de comunicación o de inicialización fallida.
  ******************************************************************************
  * @attention
  *

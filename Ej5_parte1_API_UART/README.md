@@ -1,15 +1,9 @@
-- Proyecto Ej4_parte2_API_MEF: El proyecto tiene como fin implementar una máquina de estados finitos
-para realizar debounce en el PUSH_BUTTON de la placa NUCLEO. El LED2 de la placa debe traté dparpadear
-de manera intermitente, el período de parpadeo puede adoptar dos valores, cambiando entre ellos
-al detectar el flanco de bajada del pulsador PUSH_BUTTON.
+- Proyecto Ej5_parte1_API_UART: Se implementa la comunicación UART. La misma envía un mensaje fijo
+a intervalos constantes. En la inicialización también se envía el estado de esta y sus parámetros
+de seteo.
 
 
-- Archivos clave: Las funciones para controlar la MEF que detectan el estado del pulsador, el flanco
-de bajada y que controla la frecuencia de parpadeo del LED se definen en el archivo API_debounce.c
-Las funciones buttonPressed() y buttonReleased() podrían haberse omitido en este ejercico haciendo que
-la función debounceFSM_update() actúe sobre la variable debounceState_t el pasar al estado BUTTON_DOWN,
-pero mi intención fue hacer que las funciones sirvieran para los dos ejercicios casi sin 
-modificarlas.
+- Archivos clave: Las funciones de comunicación por UART se incluyen en el archivo API_uart.c
 
 - Para consultas y sugerencias sobre el proyecto puede contactarse por correo electrónico a
 juanperez1234@gmail.com
