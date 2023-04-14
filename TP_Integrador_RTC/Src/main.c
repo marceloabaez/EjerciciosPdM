@@ -26,6 +26,8 @@
 #include "API_debounce.h"
 #include "API_delay.h"
 #include "API_uart.h"
+#include "API_RTC.h"
+#include "API_LCD.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
  * @{
@@ -104,30 +106,10 @@ int main(void){
 
 	while(1){
 
-	//Actualiza estado del pulsador
-	debounceFSM_update();
 
-	//Lee el pulsador y actúa ante flancos y no cambio
-	switch(readKey()){
-		case DSC:
-			BSP_LED_On(LED2);
-			uartSendString((uint8_t *)uart_button_down);
-			break;
-		case ASC:
-			BSP_LED_Off(LED2);
-			uartSendString((uint8_t *)uart_button_up);
-			break;
-		case NC:
-			//Agregar funcionalidad ante la falta de cambios
-			break;
-		default:
-			uartSendString((uint8_t *)uart_falla_lect);
-			while(1);
-			break;
 
-	}}
-	return 0;
-}
+		return 0;
+}}
 
 /**
  * @brief  System Clock Configuration

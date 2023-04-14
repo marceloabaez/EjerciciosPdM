@@ -65,8 +65,8 @@ all: main-build
 main-build: TP_Integrador_RTC.elf secondary-outputs
 
 # Tool invocations
-TP_Integrador_RTC.elf TP_Integrador_RTC.map: $(OBJS) $(USER_OBJS) /home/marcelo/STM32CubeIDE/workspace_1.11.2/TP_Integrador_RTC/STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "TP_Integrador_RTC.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/marcelo/STM32CubeIDE/workspace_1.11.2/TP_Integrador_RTC/STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TP_Integrador_RTC.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+TP_Integrador_RTC.elf TP_Integrador_RTC.map: $(OBJS) $(USER_OBJS) /home/marcelo/Documentos/ese/Ejercicios/TP_Integrador_RTC/STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "TP_Integrador_RTC.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/marcelo/Documentos/ese/Ejercicios/TP_Integrador_RTC/STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TP_Integrador_RTC.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

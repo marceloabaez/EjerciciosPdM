@@ -10,7 +10,7 @@ typedef enum{
 	RTC_activo,
 	RTC_set_hora,
 	RTC_set_fecha,
-}RTC;
+}RTC_FSM;
 
 void RTC_estado();
 void RTC_init(); // Setea parámetros de funcionamiento del RTC

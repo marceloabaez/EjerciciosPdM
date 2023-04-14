@@ -1,4 +1,4 @@
-#include "RTC.h"
+#include <API_RTC.h>
 
 #define RTC_ADD 0b11010000 // dirección I2C del RTC
 #define RTC_CTRL_REG 0x0E	// dirección del registro de control del RTC
