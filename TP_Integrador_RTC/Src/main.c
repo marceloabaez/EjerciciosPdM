@@ -27,7 +27,8 @@
 #include "API_delay.h"
 #include "API_uart.h"
 #include "API_RTC.h"
-#include "API_LCD.h"
+#include "stm32f4xx.h"
+//#include "API_LCD.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
  * @{
@@ -41,22 +42,18 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
-#define f1 100
-#define f2 500
+
 /* Private variables ---------------------------------------------------------*/
-uint16_t freq[2] = {f1, f2};
-bool_t i = false;
+I2C_HandleTypeDef hi2c1;
+UART_HandleTypeDef huart3;
 
 char uart_buf[] = "Mensaje UART\n\r";
 char uart_button_up[] = "Flanco ascendente\n\r";
 char uart_button_down[] = "Flanco descendente\n\r";
 char uart_falla_lect[] = "Fallo en la lectura, se detiene el programa\n\r";
 
-//int estado = BUTTON_UP; //Variable de estado de la MEF
-//int estado_anterior = BUTTON_UP;
-//bool_t estado_PB = 1;
-//extern delay_t tiempo_rebote;
-delay_t tiempo_LED;
+char mensaje []= "Holaaaa";
+
 
 /* UART handler declaration */
 
@@ -65,6 +62,12 @@ delay_t tiempo_LED;
 
 static void SystemClock_Config(void);
 static void Error_Handler(void);
+static void I2C_I2C1_Init(void);
+static void USART3_UART_Init(void);
+
+void I2C_Read(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
+void I2C_Write(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
+
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -88,28 +91,20 @@ int main(void){
 
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
-	  //MX_USART3_UART_Init()
-
-	/* Initialize BSP Led for LED2 */
-	BSP_LED_Init(LED2);
-	/* Initialize BSP PB for BUTTON_USER */
-	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
-
-	delay_t tiempo_rebote;
-	delayInit(&tiempo_rebote, DEBOUNCE_TIME);
-
-	//delayInit(&tiempo_LED, freq[i]);
-	void debounceFSM_init();
-
+	I2C_I2C1_Init();
+	//USART3_UART_Init();
 	uartInit();
 	/* Infinite loop */
 
 	while(1){
 
-
+		mensaje = RTC_leer_hora();
+		uartSendString(mensaje);
+		HAL_Delay(1000);
+	}
 
 		return 0;
-}}
+}
 
 /**
  * @brief  System Clock Configuration
@@ -180,11 +175,77 @@ static void SystemClock_Config(void)
 		Error_Handler();
 	}
 }
+
+static void I2C_I2C1_Init(){
+	hi2c1.Instance = I2C1;
+	hi2c1.Init.ClockSpeed = 100000;
+	hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	hi2c1.Init.OwnAddress1 = 0;
+	hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	hi2c1.Init.OwnAddress2 = 0;
+	hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	  /** Configure Analogue filter
+	  */
+	  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+	  {
+	    Error_Handler();
+	  }
+
+	  /** Configure Digital filter
+	  */
+	  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+	  {
+	    Error_Handler();
+	  }
+	  /* USER CODE BEGIN I2C1_Init 2 */
+
+	  /* USER CODE END I2C1_Init 2 */
+
+	}
+
+
 /**
  * @brief  This function is executed in case of error occurrence.
  * @param  None
  * @retval None
  */
+
+static void USART3_UART_Init(void)
+{
+  /* USER CODE BEGIN USART3_Init 0 */
+
+  /* USER CODE END USART3_Init 0 */
+
+  /* USER CODE BEGIN USART3_Init 1 */
+
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
+
+  /* USER CODE END USART3_Init 2 */
+
+}
+
+
+
 static void Error_Handler(void)
 {
 	/* Turn LED2 on */

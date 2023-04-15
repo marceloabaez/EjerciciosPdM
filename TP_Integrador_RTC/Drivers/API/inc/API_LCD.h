@@ -9,4 +9,4 @@ void LCD_init();
 void LCD_clear();
 void LCD_row_0();
 void LCD_row_1();
-void LCD_send();
+void LCD_send(uint8_t msg, bool RS);

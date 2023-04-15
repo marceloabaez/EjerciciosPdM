@@ -11,7 +11,7 @@ uint32_t uart_delay = 100;
 //Inicializa la UART y envía por UART confirmación de inicialización y parámetros
 bool_t uartInit(){
 	UartHandle.Instance        = USART3;
-	UartHandle.Init.BaudRate   = 9600;
+	UartHandle.Init.BaudRate   = 115200;
 	UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
 	UartHandle.Init.StopBits   = UART_STOPBITS_1;
 	UartHandle.Init.Parity     = UART_PARITY_NONE;
@@ -31,8 +31,9 @@ bool_t uartInit(){
 
 //Envía un string por UART
 void uartSendString(uint8_t * pstring){
-	uint16_t len = (uint16_t) strlen((const char *)pstring);
+	uint16_t len = ((uint16_t) strlen((const char *)pstring));
 	HAL_UART_Transmit(&UartHandle, pstring, len, uart_delay);
+	return;
 }
 
 //Envía una cantidad "size" de elementos de un string
@@ -42,6 +43,7 @@ void uartSendStringSize(uint8_t * pstring, uint16_t size){
 }	else{
 	uartSendString((uint8_t *) "Caracteres > longitud del string");
 }
+	return;
 }
 
 

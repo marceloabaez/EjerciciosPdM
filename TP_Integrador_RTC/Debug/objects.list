@@ -1,5 +1,6 @@
 "./Drivers/API/src/API_LCD.o"
 "./Drivers/API/src/API_RTC.o"
+"./Drivers/API/src/API_RTC_port.o"
 "./Drivers/API/src/API_debounce.o"
 "./Drivers/API/src/API_delay.o"
 "./Drivers/API/src/API_uart.o"

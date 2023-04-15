@@ -1,11 +1,11 @@
-#include <API_RTC.h>
+#include "API_RTC.h"
+//#include "API_RTC_port.c"
 
 #define RTC_ADD 0b11010000 // dirección I2C del RTC
 #define RTC_CTRL_REG 0x0E	// dirección del registro de control del RTC
 #define RTC_CTRL_INIT 0b	// byte de configuración inicial del registro de control
 #define RTC_TIME_ADD 0x00 // dirección del registro de segundos
 #define RTC_DATE_ADD 0x04 // dirección del registro de día
-#define I2C_TO 50 // Timeout de la comunicación I2C
 
 uint8_t segundos;
 uint8_t minutos;
@@ -15,15 +15,17 @@ uint8_t dia;
 uint8_t mes;
 uint8_t anio;
 
+void I2C_Read(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
+void I2C_Write(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
 
 static int estado = RTC_inactivo;
-static uint8_t buff[20];
+uint8_t buff[20];
 static char i2c_msg[20];
 
 // Setea parámetros de funcionamiento del RTC
 void RTC_init(){
 estado = RTC_activo;
-HAL_I2C_Mem_Write(&hi2c1,RTC_ADD);
+//HAL_I2C_Mem_Write(&hi2c1,RTC_ADD);
 
 }
 
@@ -34,7 +36,8 @@ void RTC_estado(){
 
 // devuelve un string con la hora en formato| hh:mm:ss
 char* RTC_leer_hora(){
-HAL_I2C_Mem_Read(&hi2c1, RTC_ADD, RTC_TIME_ADD, 1, buff, 3, I2C_TO);
+//HAL_I2C_Mem_Read(&hi2c1, RTC_ADD, RTC_TIME_ADD, 1, buff, 3, I2C_TO);
+I2C_Read(RTC_ADD, RTC_TIME_ADD, 3);
 segundos = (buff[0] >> 4)* 10 + (buff[0] & 0b00001111);
 minutos = (buff[1] >> 4)* 10 + (buff[1] & 0b00001111);
 horas = ((buff[2] >> 4)& 0b00000011)* 10 + (buff[2] & 0b00001111);
@@ -44,7 +47,8 @@ return(i2c_msg);
 
 // devuelve fecha en formato dd/mm/aaaa
 char* RTC_leer_fecha(){
-HAL_I2C_Mem_Read(&hi2c1, RTC_ADD, RTC_DATE_ADD, 1, buff, 3, I2C_TO);
+//HAL_I2C_Mem_Read(&hi2c1, RTC_ADD, RTC_DATE_ADD, 1, buff, 3, I2C_TO);
+I2C_Read(RTC_ADD, RTC_DATE_ADD, 3);
 dia = (buff[0] >> 4)* 10 + (buff[0] & 0b00001111);
 mes = ((buff[1] >> 4) & 0b00000011)* 10 + (buff[1] & 0b00001111);
 anio = (buff[2] >> 4)* 10 + (buff[2] & 0b00001111);
@@ -64,22 +68,20 @@ decenas = minutos / 10;
 buff[1] = (decenas << 4) + (minutos - decenas);
 decenas = segundos / 10;
 buff[0] = (decenas << 4) + (segundos - decenas);
-HAL_I2C_Mem_Write(&hi2c1, RTC_ADD, RTC_TIME_ADD, 1, buff, 3, I2C_TO);
-return 0;
+I2C_Write(RTC_ADD, RTC_TIME_ADD, 3);
 }
 
 // acepta un string con la fecha formateada
 void RTC_send_fecha(char * i2c_msg){
-	uint8_t decenas;
+	uint8_t decenas = 0;
 	dia = (i2c_msg[0] - '0')*10 + (i2c_msg[1] - '0');
 	mes = (i2c_msg[3] - '0')*10 + (i2c_msg[4] - '0');
 	anio = (i2c_msg[6] - '0')*10 + (i2c_msg[7] - '0');
 	buff[0] = (decenas << 4) + (dia - decenas);
-	decenas = anios / 10;
+	decenas = anio / 10;
 	buff[1] = (decenas << 4) + (mes - decenas);
 	decenas = segundos / 10;
-	buff[2] = (decenas << 4) + (anios - decenas);
+	buff[2] = (decenas << 4) + (anio - decenas);
 	decenas = minutos / 10;
-	HAL_I2C_Mem_Write(&hi2c1, RTC_ADD, RTC_DATE_ADD, 1, buff, 3, I2C_TO);
-	return 0;
+	I2C_Write(RTC_ADD, RTC_DATE_ADD, 3);
 }
