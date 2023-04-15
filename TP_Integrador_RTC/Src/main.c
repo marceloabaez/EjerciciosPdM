@@ -28,6 +28,9 @@
 #include "API_uart.h"
 #include "API_RTC.h"
 #include "stm32f4xx.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_i2c.h"
+
 //#include "API_LCD.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
@@ -51,8 +54,12 @@ char uart_buf[] = "Mensaje UART\n\r";
 char uart_button_up[] = "Flanco ascendente\n\r";
 char uart_button_down[] = "Flanco descendente\n\r";
 char uart_falla_lect[] = "Fallo en la lectura, se detiene el programa\n\r";
+char salto[] = "\n\r";
+char espacio[] = "  ";
+char fecha[] = "15/04/23";
+char hora[] = "20:45:15";
 
-char mensaje []= "Holaaaa";
+char * mensaje;
 
 
 /* UART handler declaration */
@@ -96,10 +103,17 @@ int main(void){
 	uartInit();
 	/* Infinite loop */
 
+	RTC_send_fecha(fecha);
+	RTC_send_hora(hora);
+
 	while(1){
 
 		mensaje = RTC_leer_hora();
 		uartSendString(mensaje);
+		mensaje = RTC_leer_fecha();
+		uartSendString(espacio);
+		uartSendString(mensaje);
+		uartSendString(salto);
 		HAL_Delay(1000);
 	}
 
@@ -210,6 +224,36 @@ static void I2C_I2C1_Init(){
 
 	}
 
+
+void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
+{
+
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(i2cHandle->Instance==I2C1)
+  {
+  /* USER CODE BEGIN I2C1_MspInit 0 */
+
+  /* USER CODE END I2C1_MspInit 0 */
+
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    /**I2C1 GPIO Configuration
+    PB6     ------> I2C1_SCL
+    PB9     ------> I2C1_SDA
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_9;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    /* I2C1 clock enable */
+    __HAL_RCC_I2C1_CLK_ENABLE();
+  /* USER CODE BEGIN I2C1_MspInit 1 */
+
+  /* USER CODE END I2C1_MspInit 1 */
+  }
+}
 
 /**
  * @brief  This function is executed in case of error occurrence.

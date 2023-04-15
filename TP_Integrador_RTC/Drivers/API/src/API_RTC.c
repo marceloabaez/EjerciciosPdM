@@ -63,11 +63,11 @@ horas = (i2c_msg[0] - '0')*10 + (i2c_msg[1] - '0');
 minutos = (i2c_msg[3] - '0')*10 + (i2c_msg[4] - '0');
 segundos = (i2c_msg[6] - '0')*10 + (i2c_msg[7] - '0');
 decenas = horas / 10;
-buff[2] = (decenas << 4) + (horas - decenas);
+buff[2] = (decenas << 4) + (horas - decenas*10);
 decenas = minutos / 10;
-buff[1] = (decenas << 4) + (minutos - decenas);
+buff[1] = (decenas << 4) + (minutos - decenas*10);
 decenas = segundos / 10;
-buff[0] = (decenas << 4) + (segundos - decenas);
+buff[0] = (decenas << 4) + (segundos - decenas*10);
 I2C_Write(RTC_ADD, RTC_TIME_ADD, 3);
 }
 
@@ -77,11 +77,11 @@ void RTC_send_fecha(char * i2c_msg){
 	dia = (i2c_msg[0] - '0')*10 + (i2c_msg[1] - '0');
 	mes = (i2c_msg[3] - '0')*10 + (i2c_msg[4] - '0');
 	anio = (i2c_msg[6] - '0')*10 + (i2c_msg[7] - '0');
-	buff[0] = (decenas << 4) + (dia - decenas);
+	decenas = dia / 10;
+	buff[0] = (decenas << 4) + (dia - decenas * 10);
+	decenas = mes / 10;
+	buff[1] = (decenas << 4) + (mes - decenas * 10);
 	decenas = anio / 10;
-	buff[1] = (decenas << 4) + (mes - decenas);
-	decenas = segundos / 10;
-	buff[2] = (decenas << 4) + (anio - decenas);
-	decenas = minutos / 10;
+	buff[2] = (decenas << 4) + (anio - decenas * 10);
 	I2C_Write(RTC_ADD, RTC_DATE_ADD, 3);
 }

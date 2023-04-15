@@ -30,7 +30,7 @@ bool_t uartInit(){
 }
 
 //Envía un string por UART
-void uartSendString(uint8_t * pstring){
+void uartSendString(char * pstring){
 	uint16_t len = ((uint16_t) strlen((const char *)pstring));
 	HAL_UART_Transmit(&UartHandle, pstring, len, uart_delay);
 	return;
