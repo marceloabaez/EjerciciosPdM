@@ -13,6 +13,7 @@ char fecha_i[] = "15/04/23";
 char hora_i[] = "20:45:15";
 char salto[] = "\n\r";
 char espacio[] = "  ";
+char espacio_largo[] = "          ";
 
 uint8_t hora [3];
 uint8_t fecha [3];
@@ -106,6 +107,7 @@ void RTC_estado(char comando){
 			}
 		}
 		RTC_leer_fecha();
+		uartSendString(espacio_largo);
 		uartSendString(i2c_msg);
 		uartSendString(salto);
 		if (comando == 'B'){
