@@ -13,7 +13,7 @@ typedef enum{
 }RTC_FSM;
 
 
-void RTC_estado();
+void RTC_estado(char comando);
 void RTC_init(); // Setea parámetros de funcionamiento del RTC
 char* RTC_leer_hora(); // devuelve un string con la hora en formato| hh:mm:ss
 char* RTC_leer_fecha(); // devuelve fecha en formato dd/mm/aaaa

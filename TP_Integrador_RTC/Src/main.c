@@ -54,10 +54,7 @@ char uart_buf[] = "Mensaje UART\n\r";
 char uart_button_up[] = "Flanco ascendente\n\r";
 char uart_button_down[] = "Flanco descendente\n\r";
 char uart_falla_lect[] = "Fallo en la lectura, se detiene el programa\n\r";
-char salto[] = "\n\r";
-char espacio[] = "  ";
-char fecha[] = "15/04/23";
-char hora[] = "20:45:15";
+
 
 char * mensaje;
 
@@ -101,20 +98,21 @@ int main(void){
 	I2C_I2C1_Init();
 	//USART3_UART_Init();
 	uartInit();
+	RTC_init();
 	/* Infinite loop */
 
-	RTC_send_fecha(fecha);
-	RTC_send_hora(hora);
+
 
 	while(1){
-
+		RTC_estado('\n');
+		/*
 		mensaje = RTC_leer_hora();
 		uartSendString(mensaje);
 		mensaje = RTC_leer_fecha();
 		uartSendString(espacio);
 		uartSendString(mensaje);
 		uartSendString(salto);
-		HAL_Delay(1000);
+		HAL_Delay(1000); */
 	}
 
 		return 0;
