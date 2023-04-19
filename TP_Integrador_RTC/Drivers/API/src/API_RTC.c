@@ -4,19 +4,23 @@
 
 #define RTC_ADD 0b11010000 // dirección I2C del RTC
 #define RTC_CTRL_REG 0x0E	// dirección del registro de control del RTC
-#define RTC_CTRL_INIT 0b00000100	// byte de configuración inicial del registro de control
-#define RTC_STAT_INIT 0b00000000
+#define RTC_CTRL_INIT 0b00000100   // byte de configuración inicial del registro de control
+#define RTC_STAT_INIT 0b00000000   // byte de configuración inicial del registro stat
 #define RTC_TIME_ADD 0x00 // dirección del registro de segundos
 #define RTC_DATE_ADD 0x04 // dirección del registro de día
 
-char fecha_i[] = "15/04/23";
-char hora_i[] = "20:45:15";
+char fecha_i[] = "15/04/23"; //Fecha inicial utilizada porque la bateria esta agotada
+char hora_i[] = "20:45:15"; //Hora inicial utilizada porque la bateria está agotada
+
+//Strings para formatear la salida
 char salto[] = "\n\r";
 char espacio[] = "  ";
 char espacio_largo[] = "          ";
+char error_RTC[] = "\n\rEstado invalido de RTC\n\r";
 
 uint8_t hora [3];
 uint8_t fecha [3];
+
 
 void I2C_Read(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
 void I2C_Write(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
@@ -37,6 +41,8 @@ RTC_send_fecha(fecha_i);
 RTC_send_hora(hora_i);
 }
 
+
+// MEF de estados del RTC
 void RTC_estado(char comando){
 	switch(estado){
 
@@ -74,7 +80,7 @@ void RTC_estado(char comando){
 				opcion++;
 			}
 		}
-		if (comando == '2'){
+		if (comando == '4'){
 			if(opcion > 0){
 				opcion--;
 			}
@@ -82,7 +88,7 @@ void RTC_estado(char comando){
 		RTC_leer_hora();
 		uartSendString(i2c_msg);
 		uartSendString(salto);
-		if (comando == 'A'){
+		if (comando == 'C'){
 			estado = RTC_activo;
 			comando = '\0';
 		}
@@ -101,7 +107,7 @@ void RTC_estado(char comando){
 				opcion++;
 			}
 		}
-		if (comando == '2'){
+		if (comando == '4'){
 			if(opcion > 0){
 				opcion--;
 			}
@@ -110,7 +116,7 @@ void RTC_estado(char comando){
 		uartSendString(espacio_largo);
 		uartSendString(i2c_msg);
 		uartSendString(salto);
-		if (comando == 'B'){
+		if (comando == 'C'){
 			estado = RTC_activo;
 			comando = '\0';
 			break;
@@ -119,17 +125,15 @@ void RTC_estado(char comando){
 		break;
 
 	default:
-
-
-
+		uartSendString(error_RTC);
+		while(1);
 		break;
 	}
 
 }
 
-// devuelve un string con la hora en formato| hh:mm:ss
+// devuelve un string con la hora en formato hh:mm:ss
 char* RTC_leer_hora(){
-//HAL_I2C_Mem_Read(&hi2c1, RTC_ADD, RTC_TIME_ADD, 1, buff, 3, I2C_TO);
 I2C_Read(RTC_ADD, RTC_TIME_ADD, 3);
 hora[0] = (buff[0] >> 4)* 10 + (buff[0] & 0b00001111);
 hora[1] = (buff[1] >> 4)* 10 + (buff[1] & 0b00001111);
@@ -140,7 +144,6 @@ return(i2c_msg);
 
 // devuelve fecha en formato dd/mm/aaaa
 char* RTC_leer_fecha(){
-//HAL_I2C_Mem_Read(&hi2c1, RTC_ADD, RTC_DATE_ADD, 1, buff, 3, I2C_TO);
 I2C_Read(RTC_ADD, RTC_DATE_ADD, 3);
 fecha[0] = (buff[0] >> 4)* 10 + (buff[0] & 0b00001111);
 fecha[1] = ((buff[1] >> 4) & 0b00000011)* 10 + (buff[1] & 0b00001111);

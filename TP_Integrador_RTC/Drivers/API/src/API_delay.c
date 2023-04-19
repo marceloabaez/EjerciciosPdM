@@ -3,7 +3,6 @@
 // Actualiza el retardo y resetea la bandera del contador
 void delayInit( delay_t * delay, tick_t duration ){
 	delay->duration = duration;
-	//delay->startTime = HAL_GetTick();
 	delay->running = false;
 }
 

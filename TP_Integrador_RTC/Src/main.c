@@ -27,6 +27,7 @@
 #include "API_delay.h"
 #include "API_uart.h"
 #include "API_RTC.h"
+#include "numpad_4x4.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_i2c.h"
@@ -44,6 +45,8 @@
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
+
+#define button_delay 200
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -54,9 +57,9 @@ char uart_buf[] = "Mensaje UART\n\r";
 char uart_button_up[] = "Flanco ascendente\n\r";
 char uart_button_down[] = "Flanco descendente\n\r";
 char uart_falla_lect[] = "Fallo en la lectura, se detiene el programa\n\r";
-
-
 char * mensaje;
+
+delay_t debounce;
 
 
 /* UART handler declaration */
@@ -67,7 +70,6 @@ char * mensaje;
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void I2C_I2C1_Init(void);
-static void USART3_UART_Init(void);
 
 void I2C_Read(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
 void I2C_Write(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
@@ -93,27 +95,31 @@ int main(void){
 	 */
 	HAL_Init();
 
-	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
 	I2C_I2C1_Init();
-	//USART3_UART_Init();
 	uartInit();
 	RTC_init();
+	GPIO_init();
+	delayInit(&debounce, button_delay);
 	/* Infinite loop */
 
-
+	char tecla = '\0';
 
 	while(1){
-		RTC_estado('\n');
-		/*
-		mensaje = RTC_leer_hora();
-		uartSendString(mensaje);
-		mensaje = RTC_leer_fecha();
-		uartSendString(espacio);
-		uartSendString(mensaje);
-		uartSendString(salto);
-		HAL_Delay(1000); */
-	}
+
+	//Se realiza una lectura del teclado 4x4 en intervalos fijos (button delay),
+    //con el fin de hacer debounce y al mismo tiempo limitar la tasa de envíos de mensajes
+	//por UART. Cada intervalo envía un comando al FSM del RTC
+	if(delayRead(&debounce)){
+		if(PressedKey_4x4() == tecla){
+			RTC_estado(tecla);
+			tecla = '\0';
+		}
+		else{
+			tecla = PressedKey_4x4();
+			RTC_estado('\0');
+		}
+	}}
 
 		return 0;
 }
@@ -142,11 +148,12 @@ int main(void){
 
 static void SystemClock_Config(void)
 {
-	RCC_ClkInitTypeDef RCC_ClkInitStruct;
-	RCC_OscInitTypeDef RCC_OscInitStruct;
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
 
 	/* Enable Power Control clock */
 	__HAL_RCC_PWR_CLK_ENABLE();
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
 
 	/* The voltage scaling allows optimizing the power consumption when the device is
      clocked below the maximum system frequency, to update the voltage scaling value 
@@ -258,34 +265,6 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
  * @param  None
  * @retval None
  */
-
-static void USART3_UART_Init(void)
-{
-  /* USER CODE BEGIN USART3_Init 0 */
-
-  /* USER CODE END USART3_Init 0 */
-
-  /* USER CODE BEGIN USART3_Init 1 */
-
-  /* USER CODE END USART3_Init 1 */
-  huart3.Instance = USART3;
-  huart3.Init.BaudRate = 115200;
-  huart3.Init.WordLength = UART_WORDLENGTH_8B;
-  huart3.Init.StopBits = UART_STOPBITS_1;
-  huart3.Init.Parity = UART_PARITY_NONE;
-  huart3.Init.Mode = UART_MODE_TX_RX;
-  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART3_Init 2 */
-
-  /* USER CODE END USART3_Init 2 */
-
-}
-
 
 
 static void Error_Handler(void)
