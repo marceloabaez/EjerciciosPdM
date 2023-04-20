@@ -1,4 +1,4 @@
-#include "numpad_4x4.h"
+#include <API_numpad_4x4.h>
 #include <stdbool.h>
 
 #define delay_GPIO 1 // Si es necesario debería reemplazarse con un delay mucho mas pequeño
@@ -54,49 +54,3 @@ char PressedKey_4x4(){
 	}
 	return '\n';
 	}
-
-
-/*
-char PressedKey_4x4(){
- //Primera fila
-	bool a = 0;
-	char key = '\0';
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_15, GPIO_PIN_SET);
-	HAL_Delay(1);
-	a = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_8);
-	if(HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_8)){
-		key = '2';
-	}
-	if(HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_9)){
-		key = 'A';
-	}
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_15, GPIO_PIN_RESET);
-
-	// Segunda fila
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_14, GPIO_PIN_SET);
-	HAL_Delay(1);
-	if(HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_7)){
-		key = '4';
-	}
-	if(HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11)){
-		key = '6';
-	}
-	if(HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_9)){
-		key = 'B';
-	}
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_14, GPIO_PIN_RESET);
-
-	//Tercera fila
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_12, GPIO_PIN_SET);
-	HAL_Delay(1);
-	if(HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_8)){
-		key = '8';
-	}
-	if(HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_9)){
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_12, GPIO_PIN_RESET);
-		key = 'C';
-	}
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_12, GPIO_PIN_RESET);
-
-return key;
-}    */

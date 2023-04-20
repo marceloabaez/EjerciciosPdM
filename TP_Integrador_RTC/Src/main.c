@@ -22,12 +22,13 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+
 #include "main.h"
 #include "API_debounce.h"
 #include "API_delay.h"
 #include "API_uart.h"
 #include "API_RTC.h"
-#include "numpad_4x4.h"
+#include "API_numpad_4x4.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_i2c.h"
@@ -52,17 +53,7 @@
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 UART_HandleTypeDef huart3;
-
-char uart_buf[] = "Mensaje UART\n\r";
-char uart_button_up[] = "Flanco ascendente\n\r";
-char uart_button_down[] = "Flanco descendente\n\r";
-char uart_falla_lect[] = "Fallo en la lectura, se detiene el programa\n\r";
-char * mensaje;
-
 delay_t debounce;
-
-
-/* UART handler declaration */
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,8 +62,7 @@ static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void I2C_I2C1_Init(void);
 
-void I2C_Read(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
-void I2C_Write(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
+
 
 
 /* Private functions ---------------------------------------------------------*/
