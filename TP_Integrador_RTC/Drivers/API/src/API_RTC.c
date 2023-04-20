@@ -1,3 +1,5 @@
+//Driver para RTC DS3231
+
 #include "API_RTC.h"
 #include "API_uart.h"
 //#include "API_RTC_port.c"
@@ -25,21 +27,21 @@ char espacio[] = "  ";
 char espacio_largo[] = "          ";
 char error_RTC[] = "\n\rEstado invalido de RTC\n\r";
 
-uint8_t hora [3];
-uint8_t fecha [3];
+static uint8_t hora [3];
+static uint8_t fecha [3];
+static int estado = RTC_inactivo;
+static char i2c_msg[20];
+static uint8_t opcion = 0;
+
+uint8_t buff[20];
 
 
 void I2C_Read(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
 void I2C_Write(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
-char* RTC_leer_hora(); // devuelve un string con la hora en formato| hh:mm:ss
-char* RTC_leer_fecha(); // devuelve fecha en formato dd/mm/aaaa
-void RTC_send_hora(char *); // acepta un string con la hora formateada y lo guarda en el RTC
-void RTC_send_fecha(char *); // acepta un string con la fecha formateada
-
-static int estado = RTC_inactivo;
-static char i2c_msg[20];
-uint8_t opcion = 0;
-uint8_t buff[20];
+static char* RTC_leer_hora(); // devuelve un string con la hora en formato| hh:mm:ss
+static char* RTC_leer_fecha(); // devuelve fecha en formato dd/mm/aaaa
+static void RTC_send_hora(char *); // acepta un string con la hora formateada y lo guarda en el RTC
+static void RTC_send_fecha(char *); // acepta un string con la fecha formateada
 
 
 // Setea parámetros de funcionamiento del RTC
