@@ -36,7 +36,7 @@ void RTC_init(){
 estado = RTC_activo;
 buff[0] = RTC_CTRL_INIT;
 buff[1] = RTC_STAT_INIT;
-I2C_Write(RTC_ADD, RTC_CTRL_REG, 2);
+I2C_Write(RTC_ADD, RTC_CTRL_REG, 1);
 RTC_send_fecha(fecha_i);
 RTC_send_hora(hora_i);
 }
@@ -56,11 +56,13 @@ void RTC_estado(char comando){
 
 		if (comando == 'A'){
 			estado = RTC_set_hora;
-			opcion = 0;
+			RTC_leer_hora();
+			opcion = 2;
 			comando = '\0';
 		}
 		if (comando == 'B'){
 			estado = RTC_set_fecha;
+			RTC_leer_fecha();
 			opcion = 0;
 			comando = '\0';
 		}
@@ -68,39 +70,77 @@ void RTC_estado(char comando){
 		break;
 
 	case  RTC_set_hora:
-		RTC_leer_hora();
+		//RTC_leer_hora();
 		if (comando == '2'){
-			hora[opcion]++;
-		}
-		if (comando == '8'){
-			hora[opcion]--;
-		}
-		if (comando == '6'){
-			if(opcion < 2){
-				opcion++;
+			if(((opcion == 2) && (hora[opcion] < 23)) | ((opcion == 1) && (hora[opcion] < 59)) | ((opcion == 0) && (hora[opcion] < 59))){
+				hora[opcion]++;
 			}
+			else {
+				hora[opcion] = 0;
+			}
+			sprintf(i2c_msg, "%02hd:%02hd:%02hd", hora[2], hora[1], hora[0]);
 		}
-		if (comando == '4'){
+
+		if (comando == '8'){
+			if(hora[opcion] > 0){
+			hora[opcion]--;
+			}
+			else if ((opcion == 0) | (opcion == 1)){
+				hora[opcion] = 59;
+			}
+			else{
+				hora[opcion] = 23;
+			}
+
+			sprintf(i2c_msg, "%02hd:%02hd:%02hd", hora[2], hora[1], hora[0]);
+		}
+
+		if (comando == '6'){
 			if(opcion > 0){
 				opcion--;
 			}
 		}
-		RTC_leer_hora();
+		if (comando == '4'){
+			if(opcion < 2){
+				opcion++;
+			}
+		}
 		uartSendString(i2c_msg);
 		uartSendString(salto);
 		if (comando == 'C'){
 			estado = RTC_activo;
+			RTC_send_hora(i2c_msg);
 			comando = '\0';
 		}
 		break;
 
 	case RTC_set_fecha:
-		RTC_leer_fecha();
 		if (comando == '2'){
-			fecha[opcion]++;
+			if(((opcion == 0) && (fecha[opcion] < 31)) | ((opcion == 1) && (fecha[opcion] < 12)) | ((opcion == 2) && (fecha[opcion] < 99))){
+				fecha[opcion]++;
+			}
+			else if((opcion == 0) || (opcion == 1)){
+				fecha[opcion] = 1;
+			}
+			else{
+				fecha[opcion] = 0;
+			}
+			sprintf(i2c_msg, "%02hd/%02hd/%02hd", fecha[0], fecha[1], fecha[2]);
 		}
 		if (comando == '8'){
-			fecha[opcion]--;
+			if(((opcion == 0) && (fecha[opcion] > 1)) | ((opcion == 1) && (fecha[opcion] > 1)) | ((opcion == 2) && (fecha[opcion] > 0))){
+				fecha[opcion]--;
+			}
+			else if(opcion == 0){
+				fecha[opcion]= 31;
+			}
+			else if(opcion == 1){
+				fecha[opcion]= 12;
+			}
+			else{
+				fecha[opcion]= 99;
+			}
+			sprintf(i2c_msg, "%02hd/%02hd/%02hd", fecha[0], fecha[1], fecha[2]);
 		}
 		if (comando == '6'){
 			if(opcion < 2){
@@ -112,12 +152,12 @@ void RTC_estado(char comando){
 				opcion--;
 			}
 		}
-		RTC_leer_fecha();
 		uartSendString(espacio_largo);
 		uartSendString(i2c_msg);
 		uartSendString(salto);
 		if (comando == 'C'){
 			estado = RTC_activo;
+			RTC_send_fecha(i2c_msg);
 			comando = '\0';
 			break;
 				}
@@ -138,7 +178,7 @@ I2C_Read(RTC_ADD, RTC_TIME_ADD, 3);
 hora[0] = (buff[0] >> 4)* 10 + (buff[0] & 0b00001111);
 hora[1] = (buff[1] >> 4)* 10 + (buff[1] & 0b00001111);
 hora[2] = ((buff[2] >> 4)& 0b00000011)* 10 + (buff[2] & 0b00001111);
-sprintf(i2c_msg, "%hd:%hd:%hd", hora[2], hora[1], hora[0]);
+sprintf(i2c_msg, "%02hd:%02hd:%02hd", hora[2], hora[1], hora[0]);
 return(i2c_msg);
 }
 
@@ -148,7 +188,7 @@ I2C_Read(RTC_ADD, RTC_DATE_ADD, 3);
 fecha[0] = (buff[0] >> 4)* 10 + (buff[0] & 0b00001111);
 fecha[1] = ((buff[1] >> 4) & 0b00000011)* 10 + (buff[1] & 0b00001111);
 fecha[2] = (buff[2] >> 4)* 10 + (buff[2] & 0b00001111);
-sprintf(i2c_msg, "%hd/%hd/%hd", fecha[0], fecha[1], fecha[2]);
+sprintf(i2c_msg, "%02hd/%02hd/%02hd", fecha[0], fecha[1], fecha[2]);
 return(i2c_msg);
 }
 
@@ -180,4 +220,5 @@ void RTC_send_fecha(char * i2c_msg){
 	decenas = fecha[2] / 10;
 	buff[2] = (decenas << 4) + (fecha[2] - decenas * 10);
 	I2C_Write(RTC_ADD, RTC_DATE_ADD, 3);
+	HAL_Delay(1000);
 }

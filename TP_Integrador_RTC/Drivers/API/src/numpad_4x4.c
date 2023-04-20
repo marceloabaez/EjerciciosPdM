@@ -7,7 +7,7 @@
 //Completar con símbolos de salida del teclado
 const char buttons [4][4] = {{'1','2','3','A'},{'4','5','6','B'},{'7','8','9','C'},{'*','0','#','D'}};
 //Completar con los pines de salida
-const uint16_t row_pins [4] = {GPIO_PIN_10, GPIO_PIN_12, GPIO_PIN_14, GPIO_PIN_15};
+const uint16_t row_pins [4] = {GPIO_PIN_15, GPIO_PIN_14, GPIO_PIN_12, GPIO_PIN_10};
 //Completar con los pines de entrada
 const uint16_t column_pins [4] = {GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_11, GPIO_PIN_9};
 
@@ -45,7 +45,7 @@ char PressedKey_4x4(){
 		HAL_GPIO_WritePin(PORT, row_pins[i], GPIO_PIN_SET);
 		HAL_Delay(delay_GPIO);
 		for(j=0; j<4; j++){
-			if(HAL_GPIO_ReadPin(PORT, column_pins [j])){
+			if(HAL_GPIO_ReadPin(PORT, column_pins[j])){
 				HAL_GPIO_WritePin(PORT, row_pins[i], GPIO_PIN_RESET);
 				return buttons[i][j];
 			}
