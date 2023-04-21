@@ -41,9 +41,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   00012b65  00000000  00000000  00034a8e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000e2f14  00000000  00000000  000475f3  2**0
+ 19 .debug_str    000e2f12  00000000  00000000  000475f3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  0012a507  2**0
+ 20 .comment      00000050  00000000  00000000  0012a505  2**0
                   CONTENTS, READONLY
  21 .debug_frame  00002e90  00000000  00000000  0012a558  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -1683,7 +1683,7 @@ void I2C_Read(uint16_t i2c_add, uint16_t mem_add, uint16_t size){
  8000e5c:	80bb      	strh	r3, [r7, #4]
  8000e5e:	4613      	mov	r3, r2
  8000e60:	807b      	strh	r3, [r7, #2]
-HAL_I2C_Mem_Read(&hi2c1, i2c_add, mem_add, 1, buff, 3,80);
+HAL_I2C_Mem_Read(&hi2c1, i2c_add, mem_add, 1, buff, 3, I2C_TO);
  8000e62:	88ba      	ldrh	r2, [r7, #4]
  8000e64:	88f9      	ldrh	r1, [r7, #6]
  8000e66:	2350      	movs	r3, #80	; 0x50
@@ -1716,7 +1716,7 @@ void I2C_Write(uint16_t i2c_add, uint16_t mem_add, uint16_t size){
  8000e98:	80bb      	strh	r3, [r7, #4]
  8000e9a:	4613      	mov	r3, r2
  8000e9c:	807b      	strh	r3, [r7, #2]
-HAL_I2C_Mem_Write(&hi2c1, i2c_add, mem_add, 1, buff, 3, 80);
+HAL_I2C_Mem_Write(&hi2c1, i2c_add, mem_add, 1, buff, 3, I2C_TO);
  8000e9e:	88ba      	ldrh	r2, [r7, #4]
  8000ea0:	88f9      	ldrh	r1, [r7, #6]
  8000ea2:	2350      	movs	r3, #80	; 0x50
