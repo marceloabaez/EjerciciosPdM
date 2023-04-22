@@ -32,9 +32,7 @@ static uint8_t fecha [3];
 static int estado = RTC_inactivo;
 static char i2c_msg[20];
 static uint8_t opcion = 0;
-
 uint8_t buff[20];
-
 
 void I2C_Read(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
 void I2C_Write(uint16_t i2c_add, uint16_t mem_add, uint16_t size);
@@ -67,11 +65,11 @@ void RTC_estado(char comando){
 
 	case RTC_activo:
 		RTC_leer_hora();
-		uartSendString(i2c_msg);
-		uartSendString(espacio);
+		uartSendString((uint8_t *)i2c_msg);
+		uartSendString((uint8_t *) espacio);
 		RTC_leer_fecha();
-		uartSendString(i2c_msg);
-		uartSendString(salto);
+		uartSendString((uint8_t *)i2c_msg);
+		uartSendString((uint8_t *)salto);
 		if (comando == 'D'){
 			estado = RTC_inactivo;
 			comando = '\0';
@@ -129,8 +127,8 @@ void RTC_estado(char comando){
 				opcion++;
 			}
 		}
-		uartSendString(i2c_msg);
-		uartSendString(salto);
+		uartSendString((uint8_t *)i2c_msg);
+		uartSendString((uint8_t *)salto);
 		if (comando == 'C'){
 			estado = RTC_activo;
 			RTC_send_hora(i2c_msg);
@@ -178,9 +176,9 @@ void RTC_estado(char comando){
 				opcion--;
 			}
 		}
-		uartSendString(espacio_largo);
-		uartSendString(i2c_msg);
-		uartSendString(salto);
+		uartSendString((uint8_t *)espacio_largo);
+		uartSendString((uint8_t *)i2c_msg);
+		uartSendString((uint8_t *)salto);
 		if (comando == 'C'){
 			estado = RTC_activo;
 			RTC_send_fecha(i2c_msg);
@@ -191,7 +189,7 @@ void RTC_estado(char comando){
 		break;
 
 	default:
-		uartSendString(error_RTC);
+		uartSendString((uint8_t *)error_RTC);
 		while(1);
 		break;
 	}

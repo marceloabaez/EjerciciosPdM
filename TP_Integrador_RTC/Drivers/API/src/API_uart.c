@@ -2,7 +2,7 @@
 
 #define uart_ok "\n\n\rInicializacion correcta\r\n"
 #define uart_failed "\n\n\rFallo inicializacion\r\n"
-#define init_msg "Comunicación UART 9600, 8N1, HwC_OFF, Tx-Rx, OS_16\n\n\r"
+#define init_msg "Comunicación UART 115200, 8N1, HwC_OFF, Tx-Rx, OS_16\n\n\r"
 typedef bool bool_t;
 
 UART_HandleTypeDef UartHandle;
@@ -30,7 +30,7 @@ bool_t uartInit(){
 }
 
 //Envía un string por UART
-void uartSendString(char * pstring){
+void uartSendString(uint8_t * pstring){
 	uint16_t len = ((uint16_t) strlen((const char *)pstring));
 	HAL_UART_Transmit(&UartHandle, pstring, len, uart_delay);
 	return;

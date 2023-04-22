@@ -7,19 +7,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         00004624  080001b0  080001b0  000101b0  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       00000134  080047d4  080047d4  000147d4  2**2
+  2 .rodata       00000138  080047d4  080047d4  000147d4  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  08004908  08004908  000200c8  2**0
+  3 .ARM.extab    00000000  0800490c  0800490c  000200c8  2**0
                   CONTENTS
-  4 .ARM          00000008  08004908  08004908  00014908  2**2
+  4 .ARM          00000008  0800490c  0800490c  0001490c  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  08004910  08004910  000200c8  2**0
+  5 .preinit_array 00000000  08004914  08004914  000200c8  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  08004910  08004910  00014910  2**2
+  6 .init_array   00000004  08004914  08004914  00014914  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08004914  08004914  00014914  2**2
+  7 .fini_array   00000004  08004918  08004918  00014918  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         000000c8  20000000  08004918  00020000  2**2
+  8 .data         000000c8  20000000  0800491c  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
   9 .ccmram       00000000  10000000  10000000  000200c8  2**0
                   CONTENTS
@@ -41,9 +41,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   00012b65  00000000  00000000  00034a8e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000e2f12  00000000  00000000  000475f3  2**0
+ 19 .debug_str    000e2f14  00000000  00000000  000475f3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  0012a505  2**0
+ 20 .comment      00000050  00000000  00000000  0012a507  2**0
                   CONTENTS, READONLY
  21 .debug_frame  00002e90  00000000  00000000  0012a558  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -500,18 +500,18 @@ void RTC_estado(char comando){
 	case RTC_activo:
 		RTC_leer_hora();
  8000620:	f000 fa24 	bl	8000a6c <RTC_leer_hora>
-		uartSendString(i2c_msg);
+		uartSendString((uint8_t *)i2c_msg);
  8000624:	488b      	ldr	r0, [pc, #556]	; (8000854 <RTC_estado+0x270>)
  8000626:	f000 fd5d 	bl	80010e4 <uartSendString>
-		uartSendString(espacio);
+		uartSendString((uint8_t *) espacio);
  800062a:	488b      	ldr	r0, [pc, #556]	; (8000858 <RTC_estado+0x274>)
  800062c:	f000 fd5a 	bl	80010e4 <uartSendString>
 		RTC_leer_fecha();
  8000630:	f000 fa78 	bl	8000b24 <RTC_leer_fecha>
-		uartSendString(i2c_msg);
+		uartSendString((uint8_t *)i2c_msg);
  8000634:	4887      	ldr	r0, [pc, #540]	; (8000854 <RTC_estado+0x270>)
  8000636:	f000 fd55 	bl	80010e4 <uartSendString>
-		uartSendString(salto);
+		uartSendString((uint8_t *)salto);
  800063a:	4888      	ldr	r0, [pc, #544]	; (800085c <RTC_estado+0x278>)
  800063c:	f000 fd52 	bl	80010e4 <uartSendString>
 		if (comando == 'D'){
@@ -776,10 +776,10 @@ void RTC_estado(char comando){
  80007e6:	701a      	strb	r2, [r3, #0]
 			}
 		}
-		uartSendString(i2c_msg);
+		uartSendString((uint8_t *)i2c_msg);
  80007e8:	481a      	ldr	r0, [pc, #104]	; (8000854 <RTC_estado+0x270>)
  80007ea:	f000 fc7b 	bl	80010e4 <uartSendString>
-		uartSendString(salto);
+		uartSendString((uint8_t *)salto);
  80007ee:	481b      	ldr	r0, [pc, #108]	; (800085c <RTC_estado+0x278>)
  80007f0:	f000 fc78 	bl	80010e4 <uartSendString>
 		if (comando == 'C'){
@@ -1077,13 +1077,13 @@ void RTC_estado(char comando){
  8000a02:	701a      	strb	r2, [r3, #0]
 			}
 		}
-		uartSendString(espacio_largo);
+		uartSendString((uint8_t *)espacio_largo);
  8000a04:	4815      	ldr	r0, [pc, #84]	; (8000a5c <RTC_estado+0x478>)
  8000a06:	f000 fb6d 	bl	80010e4 <uartSendString>
-		uartSendString(i2c_msg);
+		uartSendString((uint8_t *)i2c_msg);
  8000a0a:	4813      	ldr	r0, [pc, #76]	; (8000a58 <RTC_estado+0x474>)
  8000a0c:	f000 fb6a 	bl	80010e4 <uartSendString>
-		uartSendString(salto);
+		uartSendString((uint8_t *)salto);
  8000a10:	4813      	ldr	r0, [pc, #76]	; (8000a60 <RTC_estado+0x47c>)
  8000a12:	f000 fb67 	bl	80010e4 <uartSendString>
 		if (comando == 'C'){
@@ -1107,7 +1107,7 @@ void RTC_estado(char comando){
 		break;
 
 	default:
-		uartSendString(error_RTC);
+		uartSendString((uint8_t *)error_RTC);
  8000a2e:	480e      	ldr	r0, [pc, #56]	; (8000a68 <RTC_estado+0x484>)
  8000a30:	f000 fb58 	bl	80010e4 <uartSendString>
 		while(1);
@@ -1996,10 +1996,10 @@ char PressedKey_4x4(){
  800105a:	46bd      	mov	sp, r7
  800105c:	bd80      	pop	{r7, pc}
  800105e:	bf00      	nop
- 8001060:	080048a4 	.word	0x080048a4
+ 8001060:	080048a8 	.word	0x080048a8
  8001064:	40021000 	.word	0x40021000
- 8001068:	080048ac 	.word	0x080048ac
- 800106c:	08004894 	.word	0x08004894
+ 8001068:	080048b0 	.word	0x080048b0
+ 800106c:	08004898 	.word	0x08004898
 
 08001070 <uartInit>:
 
@@ -2078,7 +2078,7 @@ bool_t uartInit(){
 080010e4 <uartSendString>:
 
 //Envía un string por UART
-void uartSendString(char * pstring){
+void uartSendString(uint8_t * pstring){
  80010e4:	b580      	push	{r7, lr}
  80010e6:	b084      	sub	sp, #16
  80010e8:	af00      	add	r7, sp, #0
@@ -2133,7 +2133,7 @@ void BSP_LED_On(Led_TypeDef Led)
  800113c:	bd80      	pop	{r7, pc}
  800113e:	bf00      	nop
  8001140:	2000004c 	.word	0x2000004c
- 8001144:	080048b4 	.word	0x080048b4
+ 8001144:	080048b8 	.word	0x080048b8
 
 08001148 <SystemInit>:
   *         configuration.
@@ -7861,7 +7861,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  8003192:	bf00      	nop
  8003194:	40023c00 	.word	0x40023c00
  8003198:	40023800 	.word	0x40023800
- 800319c:	080048bc 	.word	0x080048bc
+ 800319c:	080048c0 	.word	0x080048c0
  80031a0:	20000058 	.word	0x20000058
  80031a4:	2000005c 	.word	0x2000005c
 
@@ -8163,7 +8163,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  80033e8:	4618      	mov	r0, r3
  80033ea:	bd80      	pop	{r7, pc}
  80033ec:	40023800 	.word	0x40023800
- 80033f0:	080048cc 	.word	0x080048cc
+ 80033f0:	080048d0 	.word	0x080048d0
 
 080033f4 <HAL_RCC_GetPCLK2Freq>:
   * @note   Each time PCLK2 changes, this function must be called to update the
@@ -8189,7 +8189,7 @@ uint32_t HAL_RCC_GetPCLK2Freq(void)
  8003410:	4618      	mov	r0, r3
  8003412:	bd80      	pop	{r7, pc}
  8003414:	40023800 	.word	0x40023800
- 8003418:	080048cc 	.word	0x080048cc
+ 8003418:	080048d0 	.word	0x080048d0
 
 0800341c <HAL_UART_Init>:
   * @param  huart  Pointer to a UART_HandleTypeDef structure that contains
@@ -9693,7 +9693,7 @@ LoopFillZerobss:
   ldr   sp, =_estack       /* set stack pointer */
  8003e60:	20030000 	.word	0x20030000
   ldr  r3, =_sidata
- 8003e64:	08004918 	.word	0x08004918
+ 8003e64:	0800491c 	.word	0x0800491c
   ldr  r0, =_sdata
  8003e68:	20000000 	.word	0x20000000
   ldr  r3, =_edata
@@ -9746,10 +9746,10 @@ Infinite_Loop:
  8003eba:	4798      	blx	r3
  8003ebc:	3601      	adds	r6, #1
  8003ebe:	e7f2      	b.n	8003ea6 <__libc_init_array+0x1e>
- 8003ec0:	08004910 	.word	0x08004910
- 8003ec4:	08004910 	.word	0x08004910
- 8003ec8:	08004910 	.word	0x08004910
- 8003ecc:	08004914 	.word	0x08004914
+ 8003ec0:	08004914 	.word	0x08004914
+ 8003ec4:	08004914 	.word	0x08004914
+ 8003ec8:	08004914 	.word	0x08004914
+ 8003ecc:	08004918 	.word	0x08004918
 
 08003ed0 <memset>:
  8003ed0:	4402      	add	r2, r0
@@ -10067,11 +10067,11 @@ Infinite_Loop:
  80041bc:	f000 f87a 	bl	80042b4 <_printf_i>
  80041c0:	e7eb      	b.n	800419a <_svfiprintf_r+0x1c2>
  80041c2:	bf00      	nop
- 80041c4:	080048d4 	.word	0x080048d4
- 80041c8:	080048de 	.word	0x080048de
+ 80041c4:	080048d8 	.word	0x080048d8
+ 80041c8:	080048e2 	.word	0x080048e2
  80041cc:	00000000 	.word	0x00000000
  80041d0:	08003f21 	.word	0x08003f21
- 80041d4:	080048da 	.word	0x080048da
+ 80041d4:	080048de 	.word	0x080048de
 
 080041d8 <_printf_common>:
  80041d8:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
@@ -10407,8 +10407,8 @@ Infinite_Loop:
  80044f0:	f104 0619 	add.w	r6, r4, #25
  80044f4:	e7f5      	b.n	80044e2 <_printf_i+0x22e>
  80044f6:	bf00      	nop
- 80044f8:	080048e5 	.word	0x080048e5
- 80044fc:	080048f6 	.word	0x080048f6
+ 80044f8:	080048e9 	.word	0x080048e9
+ 80044fc:	080048fa 	.word	0x080048fa
 
 08004500 <memcpy>:
  8004500:	440a      	add	r2, r1
