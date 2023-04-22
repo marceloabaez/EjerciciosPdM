@@ -49,7 +49,7 @@ void RTC_init(){
 estado = RTC_inactivo;
 buff[0] = RTC_CTRL_INIT;
 buff[1] = RTC_STAT_INIT;
-I2C_Write(RTC_ADD, RTC_CTRL_REG, 1);
+I2C_Write(RTC_ADD, RTC_CTRL_REG, 2);
 RTC_send_fecha(fecha_i);
 RTC_send_hora(hora_i);
 }

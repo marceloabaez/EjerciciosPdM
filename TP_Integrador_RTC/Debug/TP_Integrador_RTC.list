@@ -442,8 +442,8 @@ buff[1] = RTC_STAT_INIT;
  80005b4:	4b08      	ldr	r3, [pc, #32]	; (80005d8 <RTC_init+0x34>)
  80005b6:	2200      	movs	r2, #0
  80005b8:	705a      	strb	r2, [r3, #1]
-I2C_Write(RTC_ADD, RTC_CTRL_REG, 1);
- 80005ba:	2201      	movs	r2, #1
+I2C_Write(RTC_ADD, RTC_CTRL_REG, 2);
+ 80005ba:	2202      	movs	r2, #2
  80005bc:	210e      	movs	r1, #14
  80005be:	20d0      	movs	r0, #208	; 0xd0
  80005c0:	f000 fc64 	bl	8000e8c <I2C_Write>
